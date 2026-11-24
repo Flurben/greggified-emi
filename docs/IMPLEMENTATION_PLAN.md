@@ -103,9 +103,12 @@ EMI must not get slower. Rules:
 ## 6. Phases
 
 1. Fork, rename, migrate saves, build. ✅
-2. Revert deviations (Shift+S fill, NEI favorites Shift+F) and re-check hotkey wording.
-3. Layout & recipe-screen keybinds (O, F, Up/Down search history, PgUp/PgDn, recipe arrows).
-4. NEI search syntax translation.
-5. Item zoom; presence highlight; history subpanel.
-6. Crafting tree window.
-7. Tests, benchmark, TFG run, parity and performance reports.
+2. Revert deviations (Shift+S fill, NEI default view mode, NEI favorites Shift+F / Shift+T). ✅
+3. Layout & recipe-screen keybinds (O, F, Up/Down search history, PgUp/PgDn, recipe arrows). ✅
+4. NEI search syntax translation. ✅
+5. Item zoom; presence highlight; history subpanel. ✅
+6. Crafting tree window. ✅
+7. Tests (25 unit, 117 in-game), dev benchmark, TFG testkit runs, parity and performance reports. ✅
+
+Not ported (see PARITY.md): tooltip pages (Z), group chat links, the tree's stats-section menu / chat link / PNG export,
+NEI's 1.7.10 cheat utilities and subsets dropdown.

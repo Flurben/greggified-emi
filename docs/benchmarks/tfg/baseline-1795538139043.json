@@ -1,0 +1,109 @@
+{
+  "emi_ready_after_join_ms": 31363.043,
+  "index_size": 22959,
+  "recipe_count": 177069,
+  "frames: inventory, mouse idle": {
+    "frames": 708,
+    "frame_ms": {
+      "mean": 3.955,
+      "p50": 3.919,
+      "p95": 4.549,
+      "p99": 5.065,
+      "max": 8.638
+    },
+    "screen_ms": {
+      "mean": 2.455,
+      "p50": 2.44,
+      "p95": 2.791,
+      "p99": 3.135,
+      "max": 3.699
+    }
+  },
+  "frames: inventory, hover index stack": {
+    "frames": 709,
+    "frame_ms": {
+      "mean": 3.915,
+      "p50": 3.847,
+      "p95": 4.468,
+      "p99": 4.713,
+      "max": 28.376
+    },
+    "screen_ms": {
+      "mean": 2.482,
+      "p50": 2.413,
+      "p95": 2.833,
+      "p99": 3.122,
+      "max": 26.916
+    }
+  },
+  "frames: inventory, page through index": {
+    "frames": 650,
+    "frame_ms": {
+      "mean": 4.671,
+      "p50": 3.629,
+      "p95": 8.803,
+      "p99": 30.605,
+      "max": 75.193
+    },
+    "screen_ms": {
+      "mean": 3.035,
+      "p50": 2.0,
+      "p95": 6.834,
+      "p99": 29.066,
+      "max": 73.721
+    }
+  },
+  "open_recipes_ms": {
+    "mean": 8.225,
+    "p50": 5.477,
+    "p95": 21.207,
+    "p99": 21.207,
+    "max": 21.207
+  },
+  "open_recipes_targets": [
+    "tfg:flora_pellets",
+    "minecraft:bucket",
+    "minecraft:iron_ingot",
+    "minecraft:redstone",
+    "minecraft:copper_ingot",
+    "minecraft:emerald",
+    "minecraft:quartz",
+    "minecraft:glowstone_dust",
+    "minecraft:gold_ingot",
+    "minecraft:stick"
+  ],
+  "frames: recipe view": {
+    "frames": 703,
+    "frame_ms": {
+      "mean": 3.685,
+      "p50": 3.663,
+      "p95": 4.148,
+      "p99": 4.344,
+      "max": 5.52
+    },
+    "screen_ms": {
+      "mean": 2.38,
+      "p50": 2.357,
+      "p95": 2.631,
+      "p99": 2.829,
+      "max": 3.963
+    }
+  },
+  "search_matches: ingot": 301,
+  "search_matches: plate": 582,
+  "search_matches: iron": 664,
+  "search_matches: @minecraft": 641,
+  "search_matches: steel rod": 25,
+  "search_matches: -ore dust": 1772,
+  "search_matches: /ingot$/": 271,
+  "search_ms": {
+    "mean": 40.839,
+    "p50": 1.739,
+    "p95": 284.08,
+    "p99": 297.474,
+    "max": 297.474
+  },
+  "mode": "baseline",
+  "checks": [],
+  "check_failures": 0
+}

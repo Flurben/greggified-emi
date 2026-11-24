@@ -188,6 +188,13 @@ public final class Config {
         return get(HISTORY_ENABLED::get, true);
     }
 
+    public static void setHistoryPanel(boolean enabled) {
+        if (SPEC.isLoaded()) {
+            HISTORY_ENABLED.set(enabled);
+            SPEC.save();
+        }
+    }
+
     public static int historyRows() {
         return get(HISTORY_ROWS::get, 2);
     }

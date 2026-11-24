@@ -1,0 +1,103 @@
+{
+  "emi_ready_after_join_ms": 21260.449,
+  "index_size": 22959,
+  "recipe_count": 177090,
+  "frames: inventory, mouse idle": {
+    "frames": 709,
+    "frame_ms": {
+      "mean": 4.055,
+      "p50": 4.0,
+      "p95": 4.66,
+      "p99": 5.574,
+      "max": 6.446
+    },
+    "screen_ms": {
+      "mean": 2.414,
+      "p50": 2.383,
+      "p95": 2.714,
+      "p99": 3.72,
+      "max": 4.17
+    }
+  },
+  "frames: inventory, hover index stack": {
+    "frames": 702,
+    "frame_ms": {
+      "mean": 4.317,
+      "p50": 4.15,
+      "p95": 5.131,
+      "p99": 6.269,
+      "max": 45.437
+    },
+    "screen_ms": {
+      "mean": 2.531,
+      "p50": 2.443,
+      "p95": 2.822,
+      "p99": 3.545,
+      "max": 43.747
+    }
+  },
+  "frames: inventory, page through index": {
+    "frames": 661,
+    "frame_ms": {
+      "mean": 4.619,
+      "p50": 3.715,
+      "p95": 7.545,
+      "p99": 26.614,
+      "max": 46.122
+    },
+    "screen_ms": {
+      "mean": 2.844,
+      "p50": 1.942,
+      "p95": 5.704,
+      "p99": 25.145,
+      "max": 44.539
+    }
+  },
+  "open_recipes_ms": {
+    "mean": 7.298,
+    "p50": 3.931,
+    "p95": 21.391,
+    "p99": 21.391,
+    "max": 21.391
+  },
+  "open_recipes_targets": [
+    "tfg:flora_pellets",
+    "minecraft:bucket",
+    "minecraft:iron_ingot",
+    "minecraft:redstone",
+    "minecraft:copper_ingot",
+    "minecraft:emerald",
+    "minecraft:quartz",
+    "minecraft:glowstone_dust",
+    "minecraft:gold_ingot",
+    "minecraft:stick"
+  ],
+  "frames: recipe view": {
+    "frames": 710,
+    "frame_ms": {
+      "mean": 3.815,
+      "p50": 3.756,
+      "p95": 4.426,
+      "p99": 4.887,
+      "max": 6.1
+    },
+    "screen_ms": {
+      "mean": 2.361,
+      "p50": 2.325,
+      "p95": 2.656,
+      "p99": 2.913,
+      "max": 3.871
+    }
+  },
+  "search_warmup_ms": 180001.52,
+  "search_ms": {
+    "mean": 30017.77,
+    "p50": 30005.182,
+    "p95": 30049.675,
+    "p99": 30049.675,
+    "max": 30049.675
+  },
+  "mode": "baseline",
+  "checks": [],
+  "check_failures": 0
+}

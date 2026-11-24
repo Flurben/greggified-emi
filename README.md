@@ -92,7 +92,7 @@ per-world).
 
 ```
 ./gradlew build                                  # jar in build/libs, runs the unit tests
-./gradlew runClient -Pselftest                   # scripted in-game test (114 checks), then quits
+./gradlew runClient -Pselftest                   # scripted in-game test (117 checks), then quits
 ./gradlew runClient -Pbenchmark [-Pbaseline] [-Pbenchsize=600]   # frame timings, with and without the mod
 ./gradlew testkitJar                             # dev-only pack test harness (see docs/PERFORMANCE.md)
 ```

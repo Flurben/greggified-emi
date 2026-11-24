@@ -1,0 +1,142 @@
+{
+  "emi_ready_after_join_ms": 31145.508,
+  "index_size": 22959,
+  "recipe_count": 177087,
+  "frames: inventory, mouse idle": {
+    "frames": 710,
+    "frame_ms": {
+      "mean": 4.232,
+      "p50": 4.139,
+      "p95": 4.924,
+      "p99": 5.73,
+      "max": 26.379
+    },
+    "screen_ms": {
+      "mean": 2.524,
+      "p50": 2.495,
+      "p95": 2.913,
+      "p99": 3.727,
+      "max": 7.625
+    }
+  },
+  "frames: inventory, hover index stack": {
+    "frames": 703,
+    "frame_ms": {
+      "mean": 4.1,
+      "p50": 4.037,
+      "p95": 4.692,
+      "p99": 4.99,
+      "max": 13.551
+    },
+    "screen_ms": {
+      "mean": 2.605,
+      "p50": 2.558,
+      "p95": 2.956,
+      "p99": 3.192,
+      "max": 11.749
+    }
+  },
+  "frames: inventory, hover index stack, item zoom off": {
+    "frames": 713,
+    "frame_ms": {
+      "mean": 3.755,
+      "p50": 3.707,
+      "p95": 4.331,
+      "p99": 4.704,
+      "max": 6.857
+    },
+    "screen_ms": {
+      "mean": 2.354,
+      "p50": 2.322,
+      "p95": 2.663,
+      "p99": 2.922,
+      "max": 5.003
+    }
+  },
+  "frames: inventory, page through index": {
+    "frames": 680,
+    "frame_ms": {
+      "mean": 4.287,
+      "p50": 3.545,
+      "p95": 7.025,
+      "p99": 16.199,
+      "max": 50.918
+    },
+    "screen_ms": {
+      "mean": 2.777,
+      "p50": 2.082,
+      "p95": 5.248,
+      "p99": 14.116,
+      "max": 49.126
+    }
+  },
+  "open_recipes_ms": {
+    "mean": 8.741,
+    "p50": 5.071,
+    "p95": 25.795,
+    "p99": 25.795,
+    "max": 25.795
+  },
+  "open_recipes_targets": [
+    "tfg:flora_pellets",
+    "minecraft:bucket",
+    "minecraft:iron_ingot",
+    "minecraft:redstone",
+    "minecraft:copper_ingot",
+    "minecraft:emerald",
+    "minecraft:quartz",
+    "minecraft:glowstone_dust",
+    "minecraft:gold_ingot",
+    "minecraft:stick"
+  ],
+  "frames: recipe view": {
+    "frames": 710,
+    "frame_ms": {
+      "mean": 3.147,
+      "p50": 3.115,
+      "p95": 3.745,
+      "p99": 3.918,
+      "max": 4.572
+    },
+    "screen_ms": {
+      "mean": 1.859,
+      "p50": 1.834,
+      "p95": 2.146,
+      "p99": 2.332,
+      "max": 3.078
+    }
+  },
+  "search_matches: ingot": 301,
+  "search_matches: plate": 582,
+  "search_matches: iron": 664,
+  "search_matches: @minecraft": 641,
+  "search_matches: steel rod": 25,
+  "search_matches: -ore dust": 1772,
+  "search_matches: /ingot$/": 271,
+  "search_ms": {
+    "mean": 40.511,
+    "p50": 1.672,
+    "p95": 276.365,
+    "p99": 295.296,
+    "max": 295.296
+  },
+  "mode": "greggified",
+  "checks": [
+    "PASS history panel added under the index",
+    "PASS looking up recipes filled the history",
+    "PASS \u0026minecraft: finds only minecraft ids (641)",
+    "PASS $forge:ingots finds the ingots tag (180)",
+    "PASS #tooltip search finished with results (43)",
+    "PASS A over the index consumed",
+    "FAIL A added a bookmark",
+    "PASS found a two-level crafting chain in the pack",
+    "PASS crafting tree opened",
+    "PASS tree has nodes (3) and roots (1)",
+    "FAIL closing the tree returns to the inventory",
+    "PASS recipe view opened",
+    "PASS Right turns the recipe page in the pack",
+    "PASS Down switches the category in the pack",
+    "PASS item zoom is on by default"
+  ],
+  "check_failures": 2
+}

@@ -76,6 +76,7 @@ public final class Testkit {
     private static final List<Double> searchMs = new ArrayList<>();
     private static int searchIndex;
     private static boolean zoomOffMeasured;
+    private static boolean historyOffMeasured;
     private static long searchStart;
     private static List<? extends EmiIngredient> searchBefore;
 
@@ -251,6 +252,16 @@ public final class Testkit {
                 }
                 case 5 -> {
                     if (scenarioDone()) {
+                        if ("greggified".equals(mode()) && !historyOffMeasured) {
+                            // the same idle screen without NEI's history panel, to show what that panel costs
+                            historyOffMeasured = true;
+                            GreggifiedChecks.setHistoryPanel(false);
+                            startScenario("inventory, mouse idle, history panel off");
+                            return;
+                        }
+                        if (historyOffMeasured) {
+                            GreggifiedChecks.setHistoryPanel(true);
+                        }
                         final var right = EmiScreenManager.getPanelFor(SidebarSide.RIGHT);
                         if (right != null && right.space != null) {
                             moveMouse(right.space.tx + 9, right.space.ty + 9);

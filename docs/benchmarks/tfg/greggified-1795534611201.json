@@ -1,0 +1,114 @@
+{
+  "emi_ready_after_join_ms": 22693.614,
+  "index_size": 22959,
+  "recipe_count": 177088,
+  "frames: inventory, mouse idle": {
+    "frames": 713,
+    "frame_ms": {
+      "mean": 3.913,
+      "p50": 3.862,
+      "p95": 4.577,
+      "p99": 5.042,
+      "max": 6.148
+    },
+    "screen_ms": {
+      "mean": 2.317,
+      "p50": 2.288,
+      "p95": 2.677,
+      "p99": 2.997,
+      "max": 4.715
+    }
+  },
+  "frames: inventory, hover index stack": {
+    "frames": 701,
+    "frame_ms": {
+      "mean": 4.59,
+      "p50": 4.562,
+      "p95": 5.366,
+      "p99": 5.969,
+      "max": 36.02
+    },
+    "screen_ms": {
+      "mean": 2.63,
+      "p50": 2.608,
+      "p95": 2.986,
+      "p99": 3.37,
+      "max": 22.75
+    }
+  },
+  "frames: inventory, page through index": {
+    "frames": 690,
+    "frame_ms": {
+      "mean": 4.173,
+      "p50": 3.63,
+      "p95": 6.08,
+      "p99": 15.413,
+      "max": 35.673
+    },
+    "screen_ms": {
+      "mean": 2.484,
+      "p50": 1.948,
+      "p95": 4.165,
+      "p99": 13.163,
+      "max": 34.149
+    }
+  },
+  "open_recipes_ms": {
+    "mean": 7.521,
+    "p50": 4.05,
+    "p95": 21.395,
+    "p99": 21.395,
+    "max": 21.395
+  },
+  "open_recipes_targets": [
+    "tfg:flora_pellets",
+    "minecraft:bucket",
+    "minecraft:iron_ingot",
+    "minecraft:redstone",
+    "minecraft:copper_ingot",
+    "minecraft:emerald",
+    "minecraft:quartz",
+    "minecraft:glowstone_dust",
+    "minecraft:gold_ingot",
+    "minecraft:stick"
+  ],
+  "frames: recipe view": {
+    "frames": 706,
+    "frame_ms": {
+      "mean": 3.367,
+      "p50": 3.252,
+      "p95": 4.053,
+      "p99": 4.978,
+      "max": 28.649
+    },
+    "screen_ms": {
+      "mean": 1.767,
+      "p50": 1.711,
+      "p95": 2.064,
+      "p99": 2.837,
+      "max": 8.076
+    }
+  },
+  "search_ms": {
+    "mean": 5017.625,
+    "p50": 5006.512,
+    "p95": 5048.084,
+    "p99": 5048.084,
+    "max": 5048.084
+  },
+  "mode": "greggified",
+  "checks": [
+    "PASS history panel added under the index",
+    "PASS looking up recipes filled the history",
+    "PASS \u0026minecraft: finds only minecraft ids (641)",
+    "PASS $forge:ingots finds the ingots tag (180)",
+    "PASS #tooltip search ran (180)",
+    "PASS A over the index consumed",
+    "PASS A added a bookmark",
+    "PASS found a two-level crafting chain in the pack",
+    "PASS crafting tree opened",
+    "PASS tree has nodes (3) and roots (1)",
+    "FAIL testkit crashed in state 13: java.lang.NoSuchFieldError: Class com.greggifiedemi.tree.CraftingTreeScreen does not have member field \u0027int width\u0027"
+  ],
+  "check_failures": 1
+}

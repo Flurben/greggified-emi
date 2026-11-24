@@ -37,7 +37,7 @@ on the owner's machine.
 | --- | --- |
 | `./gradlew build` | Compiles, runs the unit tests, and writes `build/libs/gtnh-bookmarks-for-emi-<version>.jar`. |
 | `./gradlew test` | Unit tests only (25): `RecipeChainMathTest` and `BookmarkGridTest`, pure Java, no Minecraft. |
-| `./gradlew runClient -Pselftest` | The scripted in-game test, which then quits. Check `run/logs/latest.log` for `[selftest]` lines and the final `[selftest] done, N failure(s)`. Currently 114 checks; screenshots go to `run/screenshots/selftest-*.png`. |
+| `./gradlew runClient -Pselftest` | The scripted in-game test, which then quits. Check `run/logs/latest.log` for `[selftest]` lines and the final `[selftest] done, N failure(s)`. Currently 117 checks; screenshots go to `run/screenshots/selftest-*.png`. |
 | `... -Pselftest -Pfastbench` | The same with FastWorkbench and Placebo loaded. Their jars go in the git-ignored `compat-libs/` (names in `build.gradle`). |
 | `./gradlew testkitJar` | Builds `build/libs/greggified-emi-testkit-<v>.jar`, a dev-only mod for real packs: drop it into a pack (with an empty `greggified-testkit/enabled` file in the game dir), with and without the mod jar; it creates/loads a creative world, times EMI scenarios, runs feature checks and writes `greggified-testkit/<mode>-<time>.json`. |
 | `./gradlew runClient -Pbenchmark` | Frame and input timings to `run/benchmark/mod.json`. Add `-Pbaseline` for EMI alone (`baseline.json`), `-Pbenchsize=600` for a large list, and `-Pjfr` for a JFR profile. Log lines are tagged `[bench:<mode>]`. |
