@@ -35,7 +35,7 @@ on the owner's machine.
 
 | Command | What it does |
 | --- | --- |
-| `./gradlew build` | Compiles, runs the unit tests, and writes `build/libs/gtnh-bookmarks-for-emi-<version>.jar`. |
+| `./gradlew build` | Compiles, runs the unit tests, and writes `build/libs/greggified-emi-<version>.jar`. |
 | `./gradlew test` | Unit tests only (28): `RecipeChainMathTest`, `BookmarkGridTest`, `NeiSearchSyntaxTest`, `FastRegexTest`; pure Java, no Minecraft. |
 | `./gradlew runClient -Pselftest` | The scripted in-game test, which then quits. Check `run/logs/latest.log` for `[selftest]` lines and the final `[selftest] done, N failure(s)`. Currently 140 checks; screenshots go to `run/screenshots/selftest-*.png`. |
 | `... -Pselftest -Pfastbench` | The same with FastWorkbench and Placebo loaded. Their jars go in the git-ignored `compat-libs/` (names in `build.gradle`). |
@@ -162,9 +162,9 @@ interactions.
   and tool NBT and wear are ignored. GregTech tools carry heavy NBT.
 - **Lag when opening uses.** It is EMI's own cost on items with thousands of uses. The benchmark shows the mod makes
   opening faster. Don't chase it in this mod without a profile.
-- **Keeping the mod ID.** The jar is named `gtnh-bookmarks-for-emi-*` (`mod_file_name` in `gradle.properties`), but
-  the mod ID, package, config file and save folder are all still `greggifiedemi`. Renaming them would orphan users'
-  bookmarks and settings.
+- **Keeping the mod ID.** The mod ID, package, config file and save folder are all `greggifiedemi` (the jar is
+  `greggified-emi-*`, `mod_file_name` in `gradle.properties`). Renaming them would orphan users' bookmarks and
+  settings. The GitHub repo `Flurben/greggified-emi` was `gtnh-bookmarks-for-emi`, whose `v1.0.0` is the old addon.
 
 ## Style
 
