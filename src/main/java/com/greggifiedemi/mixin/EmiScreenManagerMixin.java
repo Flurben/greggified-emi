@@ -21,6 +21,7 @@ import com.greggifiedemi.bookmark.GridGeometry;
 import com.greggifiedemi.bookmark.ItemShortcuts;
 import com.greggifiedemi.bookmark.NamespaceFooter;
 import com.greggifiedemi.nei.NeiInput;
+import com.greggifiedemi.scale.EmiScale;
 
 import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.config.SidebarSettings;
@@ -133,12 +134,14 @@ public abstract class EmiScreenManagerMixin {
         final boolean changed = list.addAll(tooltip);
 
         try {
-            final EmiStackInteraction hovered = EmiScreenManager.getHoveredStack(EmiScreenManager.lastMouseX,
-                    EmiScreenManager.lastMouseY, false);
+            // lastMouseX/Y are game coordinates; this runs in EMI's space, which may have its own scale
+            final double mouseX = EmiScale.fromGame(EmiScreenManager.lastMouseX);
+            final double mouseY = EmiScale.fromGame(EmiScreenManager.lastMouseY);
+            final EmiStackInteraction hovered = EmiScreenManager.getHoveredStack((int) mouseX, (int) mouseY, false);
 
             if (!hovered.isEmpty() && !list.isEmpty()) {
-                list.addAll(1, ItemShortcuts.itemHotkeyTips(hovered.getStack(), EmiScreenManager.lastMouseX,
-                        EmiScreenManager.lastMouseY, hovered.getRecipeContext()));
+                list.addAll(1, ItemShortcuts.itemHotkeyTips(hovered.getStack(), mouseX, mouseY,
+                        hovered.getRecipeContext()));
             }
         } catch (RuntimeException e) {
             GreggifiedEmi.LOGGER.debug("Failed to add hotkey hints", e);

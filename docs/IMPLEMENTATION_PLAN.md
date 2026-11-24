@@ -109,6 +109,9 @@ EMI must not get slower. Rules:
 5. Item zoom; presence highlight; history subpanel. ✅
 6. Crafting tree window. ✅
 7. Tests (25 unit, 117 in-game), dev benchmark, TFG testkit runs, parity and performance reports. ✅
+8. Owner request (not NEI): detached EMI GUI scale. EMI's sidebars run in a virtual "EMI space" at their own
+   scale; inventories, the recipe view and tooltips keep the game's. Options in EMI's config screen, stored in this
+   mod's config. ✅
 
 Not ported (see PARITY.md): tooltip pages (Z), group chat links, the tree's stats-section menu / chat link / PNG export,
 NEI's 1.7.10 cheat utilities and subsets dropdown.

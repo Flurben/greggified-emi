@@ -62,6 +62,8 @@ Shift+drag sort, gutter drag to group/ungroup, Alt+LMB collapse — all as NEI *
 - Tooltips list EMI's mod name line; NEI's tooltip pages (Z) do not exist in EMI.
 - Fluid amounts show in mB with an `L` suffix like NEI.
 - Group chat links (sharing a whole group through chat) and the tree's PNG export are not ported yet.
+- **Addition, not in NEI:** EMI's panels can use their own GUI scale (EMI config → UI → *Detach GUI Scale* /
+  *EMI GUI Scale*, off by default). Inventories, the recipe view and tooltips keep the game's GUI scale.
 
 ## 4. Migrating from GTNH Bookmarks for EMI
 

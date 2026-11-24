@@ -27,6 +27,7 @@ import com.greggifiedemi.chain.RecipeChainMath;
 import com.greggifiedemi.chain.RecipeKey;
 import com.greggifiedemi.chain.Stacks;
 import com.greggifiedemi.mixin.RecipeScreenAccessor;
+import com.greggifiedemi.scale.EmiScale;
 import com.greggifiedemi.network.ChatLinksClient;
 import com.greggifiedemi.tree.CraftingTreeScreen;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -71,7 +72,11 @@ public final class ItemShortcuts {
     }
 
     /** The recipe under the mouse in EMI's recipe view (NEI's focused recipe in its recipe GUI). */
-    public static @Nullable EmiRecipe focusedRecipe(double mouseX, double mouseY) {
+    public static @Nullable EmiRecipe focusedRecipe(double currentX, double currentY) {
+        // recipe view widgets are at the game's GUI scale, even when EMI's panels are not
+        final double mouseX = EmiScale.game(currentX);
+        final double mouseY = EmiScale.game(currentY);
+
         if (Minecraft.getInstance().screen instanceof RecipeScreen screen) {
             for (WidgetGroup group : ((RecipeScreenAccessor) screen).greggifiedemi$getCurrentPage()) {
                 if (mouseX >= group.x && mouseY >= group.y && mouseX < group.x + group.width
@@ -84,7 +89,10 @@ public final class ItemShortcuts {
     }
 
     /** The stack slot under the mouse in EMI's recipe view (EMI's own hover lookup does not see these). */
-    private static @Nullable SlotWidget recipeSlot(double mouseX, double mouseY) {
+    private static @Nullable SlotWidget recipeSlot(double currentX, double currentY) {
+        final double mouseX = EmiScale.game(currentX);
+        final double mouseY = EmiScale.game(currentY);
+
         if (!(Minecraft.getInstance().screen instanceof RecipeScreen screen)) {
             return null;
         }
@@ -104,7 +112,8 @@ public final class ItemShortcuts {
     }
 
     private static @Nullable Hovered hovered(double mouseX, double mouseY) {
-        final BookmarksGridSlot slot = BookmarkPanel.hoveredSlot(mouseX, mouseY);
+        // the panel's geometry is EMI's layout, which may use its own GUI scale
+        final BookmarksGridSlot slot = BookmarkPanel.hoveredSlot(EmiScale.emi(mouseX), EmiScale.emi(mouseY));
 
         if (slot != null) {
             final EmiStack stack = BookmarkPanel.stackWithQuantity(slot);
@@ -112,7 +121,7 @@ public final class ItemShortcuts {
                     : new Hovered(stack, slot.getEmiRecipeContext(), slot, slot.getEmiRecipeContext());
         }
 
-        if (BookmarkPanel.spaceAt(mouseX, mouseY) != null) {
+        if (BookmarkPanel.spaceAt(EmiScale.emi(mouseX), EmiScale.emi(mouseY)) != null) {
             return null;
         }
 
@@ -216,7 +225,7 @@ public final class ItemShortcuts {
         }
 
         if (hovered == null) {
-            final int groupId = BookmarkPanel.hoveredGroupId(mouseX, mouseY);
+            final int groupId = BookmarkPanel.hoveredGroupId(EmiScale.emi(mouseX), EmiScale.emi(mouseY));
 
             if (groupId != -1) {
                 final BookmarkGrid grid = BookmarkPanel.grid();

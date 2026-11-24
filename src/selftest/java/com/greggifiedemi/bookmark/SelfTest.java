@@ -79,6 +79,8 @@ public final class SelfTest {
     private static int axeGroup;
     private static long planksBefore;
     private static int treeGroup;
+    private static int scaleGuiLeft;
+    private static int scalePageSize;
     private static final List<String> failures = new ArrayList<>();
 
     private SelfTest() {}
@@ -900,7 +902,129 @@ public final class SelfTest {
                 }
                 case 75 -> {
                     screenshot("28-shift-t-tree");
+                    minecraft.getSingleplayerServer().execute(() -> minecraft.getSingleplayerServer().getPlayerList()
+                            .getPlayers().get(0).getInventory().add(new ItemStack(Items.TORCH, 7)));
                     minecraft.setScreen(new InventoryScreen(minecraft.player));
+                }
+                case 76 -> {
+                    // Detached GUI scale: the options sit at the top of the UI group of EMI's config screen
+                    scaleGuiLeft = ((AbstractContainerScreen<?>) minecraft.screen).getGuiLeft();
+                    scalePageSize = EmiScreenManager.getPanelFor(SidebarSide.RIGHT).space.pageSize;
+                    minecraft.setScreen(new dev.emi.emi.screen.ConfigScreen(minecraft.screen));
+                }
+                case 77 -> {
+                    final var config = (dev.emi.emi.screen.ConfigScreen) minecraft.screen;
+                    final var entries = config.list.children();
+                    int ui = -1;
+                    for (int i = 0; i < entries.size(); i++) {
+                        if (entries.get(i) instanceof dev.emi.emi.screen.widget.config.GroupNameWidget g
+                                && g.id.equals("ui")) {
+                            ui = i;
+                            break;
+                        }
+                    }
+                    check(ui >= 0 && entries.get(ui + 1) instanceof dev.emi.emi.screen.widget.config.BooleanWidget detach
+                            && detach.getSearchableText().equals("Detach GUI Scale")
+                            && entries.get(ui + 2) instanceof dev.emi.emi.screen.widget.config.IntWidget scale
+                            && scale.getSearchableText().equals("EMI GUI Scale"),
+                            "EMI's config screen lists Detach GUI Scale and EMI GUI Scale under UI");
+                    final int game = (int) minecraft.getWindow().getGuiScale();
+                    check(game > 1, "the test window's GUI scale (" + game + ") leaves room for a smaller EMI scale");
+                    com.greggifiedemi.Config.setGuiScale(true, game - 1);
+                    config.onClose();
+                }
+                case 78 -> {
+                    final var screen = (AbstractContainerScreen<?>) minecraft.screen;
+                    final double k = scaleFactor();
+                    final SidebarPanel right = EmiScreenManager.getPanelFor(SidebarSide.RIGHT);
+                    check(com.greggifiedemi.scale.EmiScale.isScaled() && k < 1, "EMI uses its own GUI scale");
+                    check(screen.width == minecraft.getWindow().getGuiScaledWidth()
+                            && screen.getGuiLeft() == scaleGuiLeft, "the inventory kept the game's GUI scale");
+                    check(right.space.pageSize > scalePageSize, "the smaller EMI scale shows more of the item list ("
+                            + scalePageSize + " -> " + right.space.pageSize + ")");
+                    check(right.space.tx * k >= screen.getGuiLeft() + 176 - 1,
+                            "the item list stays clear of the inventory");
+                    check(!com.greggifiedemi.scale.EmiScale.inEmi(), "the test tick runs in game space");
+                    // hover and A over an item list stack, at the game position of its EMI-scale slot
+                    final var page = right.space.getPage(right.page);
+                    int index = -1;
+                    for (int i = 0; i < page.size(); i++) {
+                        final var candidate = page.get(i);
+                        if (!candidate.isEmpty() && grid.getBookmarkItems().stream().noneMatch(
+                                item -> item.stack.key.equals(Stacks.keyOf(candidate.getEmiStacks().get(0))))) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    check(index >= 0, "the item list page has a stack that is not bookmarked");
+                    final EmiStack target = page.get(index).getEmiStacks().get(0);
+                    moveMouse((right.space.getRawX(index) + 9) * k, (right.space.getRawY(index) + 9) * k);
+                    check(EmiApi.getHoveredStack(false).getStack().getEmiStacks().get(0).isEqual(target),
+                            "the item list stack under the cursor is hovered");
+                    final int size = grid.size();
+                    check(key(GLFW.GLFW_KEY_A, 30) && grid.size() == size + 1, "A bookmarked the hovered stack");
+                    // the new bookmark under the cursor
+                    final ChainItem added = grid.getBookmarkItems().stream()
+                            .filter(item -> item.stack.key.equals(Stacks.keyOf(target))).findFirst().orElse(null);
+                    check(added != null, "the bookmark exists");
+                    if (added != null) {
+                        final double[] at = moveTo(added);
+                        moveMouse(at[0] * k, at[1] * k);
+                        check(ItemShortcuts.hoveredStack(at[0] * k, at[1] * k).isEqual(target),
+                                "the bookmark under the cursor is hovered");
+                    }
+                    // an inventory slot keeps the game's scale (EMI reads it from the next drawn frame)
+                    final var slot = screen.getMenu().slots.stream().filter(s -> s.getItem().is(Items.TORCH))
+                            .findFirst().orElse(null);
+                    check(slot != null, "the inventory holds torches");
+                    if (slot != null) {
+                        moveMouse(screen.getGuiLeft() + slot.x + 8, screen.getGuiTop() + slot.y + 8);
+                    }
+                }
+                case 79 -> {
+                    check(EmiApi.getHoveredStack(true).getStack().getEmiStacks().get(0).getItemStack()
+                            .is(Items.TORCH), "the inventory slot under the cursor is hovered");
+                    // leave the cursor over sticks in the item list for the screenshot and the click
+                    final double k = scaleFactor();
+                    final double[] stick = moveToIndexStack(EmiStack.of(Items.STICK));
+                    moveMouse(stick[0] * k, stick[1] * k);
+                }
+                case 80 -> {
+                    screenshot("29-detached-scale-inventory");
+                    final double x = EmiScreenManager.lastMouseX + 0.5;
+                    final double y = EmiScreenManager.lastMouseY + 0.5;
+                    final boolean clicked = EmiScreenManager.mouseClicked(x, y, 0);
+                    final boolean released = EmiScreenManager.mouseReleased(x, y, 0);
+                    check(clicked || released, "LMB on the item list consumed");
+                    check(minecraft.screen instanceof RecipeScreen, "LMB on an item list stack opened its recipes");
+                }
+                case 81 -> {
+                    final var screen = minecraft.screen;
+                    final double k = scaleFactor();
+                    final var bounds = dev.emi.emi.screen.EmiScreenBase.of(screen).bounds();
+                    check(screen.width == minecraft.getWindow().getGuiScaledWidth()
+                            && Math.abs(bounds.x() - (screen.width - bounds.width()) / 2) <= 1,
+                            "the recipe view kept the game's GUI scale");
+                    final SidebarPanel right = EmiScreenManager.getPanelFor(SidebarSide.RIGHT);
+                    check(right.space.tx * k >= bounds.right() - 1, "the item list stays clear of the recipe view");
+                    final var accessor = (RecipeScreenAccessor) screen;
+                    final var group = accessor.greggifiedemi$getCurrentPage().stream()
+                            .filter(g -> g.recipe != null && g.recipe.getId() != null).findFirst().orElse(null);
+                    final double[] output = group == null ? null : moveToRecipeOutput(group.recipe.getId().toString());
+                    check(output != null, "the recipe view shows a recipe output");
+                }
+                case 82 -> {
+                    // EMI's API does not report recipe view slots; NEI's keys find them through ItemShortcuts
+                    check(!ItemShortcuts.hoveredStack(EmiScreenManager.lastMouseX, EmiScreenManager.lastMouseY)
+                            .isEmpty(), "a recipe view slot under the cursor is hovered");
+                    screenshot("30-detached-scale-recipes");
+                    com.greggifiedemi.Config.setGuiScale(false, 0);
+                    minecraft.setScreen(new InventoryScreen(minecraft.player));
+                }
+                case 83 -> {
+                    check(!com.greggifiedemi.scale.EmiScale.isScaled()
+                            && EmiScreenManager.getPanelFor(SidebarSide.RIGHT).space.pageSize == scalePageSize,
+                            "attaching the scale again restored the layout");
                     GreggifiedEmi.LOGGER.info("[selftest] done, {} failure(s): {}", failures.size(), failures);
                     minecraft.stop();
                 }
@@ -910,6 +1034,11 @@ public final class SelfTest {
             GreggifiedEmi.LOGGER.error("[selftest] failed at step {}", step - 1, th);
             minecraft.stop();
         }
+    }
+
+    /** Game GUI units per EMI unit while EMI's GUI scale is detached. */
+    private static double scaleFactor() {
+        return (double) com.greggifiedemi.scale.EmiScale.emiScale() / Minecraft.getInstance().getWindow().getGuiScale();
     }
 
     /** Puts the mouse over the torch bookmark and returns its position. */

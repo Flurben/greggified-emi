@@ -37,7 +37,7 @@ on the owner's machine.
 | --- | --- |
 | `./gradlew build` | Compiles, runs the unit tests, and writes `build/libs/gtnh-bookmarks-for-emi-<version>.jar`. |
 | `./gradlew test` | Unit tests only (25): `RecipeChainMathTest` and `BookmarkGridTest`, pure Java, no Minecraft. |
-| `./gradlew runClient -Pselftest` | The scripted in-game test, which then quits. Check `run/logs/latest.log` for `[selftest]` lines and the final `[selftest] done, N failure(s)`. Currently 117 checks; screenshots go to `run/screenshots/selftest-*.png`. |
+| `./gradlew runClient -Pselftest` | The scripted in-game test, which then quits. Check `run/logs/latest.log` for `[selftest]` lines and the final `[selftest] done, N failure(s)`. Currently 138 checks; screenshots go to `run/screenshots/selftest-*.png`. |
 | `... -Pselftest -Pfastbench` | The same with FastWorkbench and Placebo loaded. Their jars go in the git-ignored `compat-libs/` (names in `build.gradle`). |
 | `./gradlew testkitJar` | Builds `build/libs/greggified-emi-testkit-<v>.jar`, a dev-only mod for real packs: drop it into a pack (with an empty `greggified-testkit/enabled` file in the game dir), with and without the mod jar; it creates/loads a creative world, times EMI scenarios, runs feature checks and writes `greggified-testkit/<mode>-<time>.json`. |
 | `./gradlew runClient -Pbenchmark` | Frame and input timings to `run/benchmark/mod.json`. Add `-Pbaseline` for EMI alone (`baseline.json`), `-Pbenchsize=600` for a large list, and `-Pjfr` for a JFR profile. Log lines are tagged `[bench:<mode>]`. |
@@ -121,6 +121,17 @@ interactions.
   - `SidebarPanelMixin` re-lays out on sidebar switches and draws the page label.
   - `EmiFavoritesMixin` turns EMI's own favorite adds into bookmarks.
   - `SlotWidgetMixin` adds hotkey hints in the recipe view. `RecipeScreenAccessor` finds the recipe under the mouse.
+- **`scale/`**: the detached EMI GUI scale (an addition, not NEI). `EmiScale` runs EMI's sidebar code in "EMI
+  space": the screen's `width`/`height` are swapped for the window's size at EMI's scale, positions are converted,
+  and drawing goes through a model-view scale (EMI's `StackBatcher` draws against the model-view matrix, so the GUI
+  pose is not enough). `ScaleConfigEntries` adds the two options to EMI's config screen.
+  - Mixins in `mixin/scale/`: `ScreenManagerScaleMixin` (priority 100, so it runs before every other head injection)
+    re-runs `EmiScreenManager`'s positional entry points inside EMI space. `ScreenBaseScaleMixin`,
+    `ExclusionAreasScaleMixin`, `StackProvidersScaleMixin`, `DragDropScaleMixin` and `TooltipScaleMixin` convert
+    back wherever EMI reaches into the screen; tooltips stay at the game's scale.
+  - **Rule:** a position is always in the *current* space. Code that compares it with the panel's geometry uses
+    `EmiScale.emi()`, code that compares it with the screen (recipe view widgets, container bounds) uses
+    `EmiScale.game()`. `EmiScreenManager.lastMouseX/Y` stay game coordinates (`EmiScale.fromGame()`).
 - **`network/`**: `ChatLinks` and `ChatLinksClient`, for Ctrl + L item links. The channel is optional, and this is
   the only feature that needs the mod on the server.
 

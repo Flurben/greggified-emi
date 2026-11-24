@@ -111,5 +111,9 @@
   "greggifiedemi.tree.toolbar.stats_on": "Hide stats panel",
   "greggifiedemi.tree.toolbar.collapse_resolved": "Collapse items with nothing left to craft",
   "greggifiedemi.tree.toolbar.collapse_all": "Collapse all nested items",
-  "greggifiedemi.tree.toolbar.expand_all": "Expand all nested items"
+  "greggifiedemi.tree.toolbar.expand_all": "Expand all nested items",
+  "config.greggifiedemi.detach_gui_scale": "Detach GUI Scale",
+  "config.greggifiedemi.tooltip.detach_gui_scale": "Draw EMI's panels at their own GUI scale.\nInventories and the recipe view keep the game's GUI scale.\n(Greggified EMI)",
+  "config.greggifiedemi.emi_gui_scale": "EMI GUI Scale",
+  "config.greggifiedemi.tooltip.emi_gui_scale": "EMI's GUI scale while detached.\n0 = Auto; larger values are capped to what the window allows,\nlike Video Settings > GUI Scale.\n(Greggified EMI)"
 }

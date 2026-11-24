@@ -7,6 +7,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 
+import com.greggifiedemi.scale.EmiScale;
+
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.registry.EmiDragDropHandlers;
@@ -77,11 +79,15 @@ public final class HeldStack {
 
     private static boolean insideGui(Screen current, double mouseX, double mouseY) {
         if (current instanceof AbstractContainerScreen<?> containerScreen) {
-            return mouseX >= containerScreen.getGuiLeft() && mouseY >= containerScreen.getGuiTop()
-                    && mouseX < containerScreen.getGuiLeft() + containerScreen.getXSize()
-                    && mouseY < containerScreen.getGuiTop() + containerScreen.getYSize();
+            // the container is at the game's GUI scale; the mouse may be in EMI's (see EmiScale)
+            final double gameX = EmiScale.game(mouseX);
+            final double gameY = EmiScale.game(mouseY);
+            return gameX >= containerScreen.getGuiLeft() && gameY >= containerScreen.getGuiTop()
+                    && gameX < containerScreen.getGuiLeft() + containerScreen.getXSize()
+                    && gameY < containerScreen.getGuiTop() + containerScreen.getYSize();
         }
 
+        // in EMI space, EmiScreenBase's bounds are converted to EMI space as well
         final Bounds bounds = EmiScreenBase.of(current).bounds();
         return bounds.contains((int) mouseX, (int) mouseY);
     }

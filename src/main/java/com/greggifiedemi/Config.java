@@ -30,6 +30,8 @@ public final class Config {
     private static final ForgeConfigSpec.BooleanValue HISTORY_ENABLED;
     private static final ForgeConfigSpec.IntValue HISTORY_ROWS;
     private static final ForgeConfigSpec.BooleanValue HIGHLIGHT_PRESENT;
+    private static final ForgeConfigSpec.BooleanValue DETACH_SCALE;
+    private static final ForgeConfigSpec.IntValue EMI_SCALE;
     private static final ForgeConfigSpec.BooleanValue ZOOM_ENABLED;
     private static final ForgeConfigSpec.BooleanValue ZOOM_NEI_ONLY;
     private static final ForgeConfigSpec.IntValue ZOOM_PREFERRED_SIDE;
@@ -80,6 +82,12 @@ public final class Config {
                 .defineInRange("historyRows", 2, 1, 10);
         HIGHLIGHT_PRESENT = builder.comment("In the recipe view, highlight ingredients you already carry "
                 + "(NEI: inventory.guirecipe.slotHighlightPresent).").define("slotHighlightPresent", true);
+        DETACH_SCALE = builder.comment("Draw EMI's panels (item list, bookmarks, history, search bar) at their own GUI "
+                + "scale instead of the game's. Inventories and the recipe view keep the game's GUI scale. Also in "
+                + "EMI's config screen.").define("detachGuiScale", false);
+        EMI_SCALE = builder.comment("EMI's GUI scale while detached: 0 = Auto (the largest the window allows), "
+                + "otherwise like Video Settings > GUI Scale, capped to what the window allows.")
+                .defineInRange("guiScale", 0, 0, 16);
         builder.pop();
 
         builder.push("itemzoom");
@@ -201,6 +209,24 @@ public final class Config {
 
     public static boolean slotHighlightPresent() {
         return get(HIGHLIGHT_PRESENT::get, true);
+    }
+
+    public static boolean detachGuiScale() {
+        return get(DETACH_SCALE::get, false);
+    }
+
+    /** EMI's own GUI scale while detached; 0 = Auto. */
+    public static int emiGuiScale() {
+        return get(EMI_SCALE::get, 0);
+    }
+
+    public static void setGuiScale(boolean detached, int scale) {
+        if (SPEC.isLoaded()) {
+            DETACH_SCALE.set(detached);
+            EMI_SCALE.set(Math.max(0, Math.min(16, scale)));
+            SPEC.save();
+        }
+        com.greggifiedemi.scale.EmiScale.reloadSettings();
     }
 
     public static boolean itemZoom() {

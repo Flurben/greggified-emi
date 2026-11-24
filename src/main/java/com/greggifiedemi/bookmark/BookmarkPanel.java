@@ -26,6 +26,8 @@ import com.greggifiedemi.chain.ChainStack;
 import com.greggifiedemi.chain.Stacks;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import com.greggifiedemi.scale.EmiScale;
+
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.EmiApi;
@@ -548,6 +550,17 @@ public final class BookmarkPanel {
         if (!isReady()) {
             return;
         }
+
+        // the rest belongs to the panel, which follows EMI's GUI scale when that is detached
+        if (EmiScale.shouldEnter()) {
+            EmiScale.draw(graphics, mouseX, mouseY, (x, y) -> renderPanelOverlay(screen, graphics, x, y, delta));
+        } else {
+            renderPanelOverlay(screen, graphics, mouseX, mouseY, delta);
+        }
+    }
+
+    private static void renderPanelOverlay(Screen screen, GuiGraphics graphics, int mouseX, int mouseY,
+            float delta) {
 
         HeldStack.render(screen, graphics, mouseX, mouseY, delta);
 
@@ -1133,7 +1146,8 @@ public final class BookmarkPanel {
         final double mouseX = EmiScreenManager.lastMouseX;
         final double mouseY = EmiScreenManager.lastMouseY;
 
-        if (isReady() && overPanel(mouseX, mouseY)) {
+        // keys arrive in game space; the panel is laid out in EMI's (see EmiScale)
+        if (isReady() && overPanel(EmiScale.emi(mouseX), EmiScale.emi(mouseY))) {
             final PanelSpace space = mainSpace();
 
             if (space != null && Keys.matches(Keys.NEXT_PAGE, keyCode, scanCode)) {

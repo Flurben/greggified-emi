@@ -54,6 +54,14 @@ Full tables: [benchmarks/dev-tables.md](benchmarks/dev-tables.md). Highlights:
 The bookmark panel replaces EMI's favorites rendering and is cheaper than it; the remaining positive numbers are NEI
 tooltips that EMI alone never draws.
 
+## Detached EMI GUI scale
+
+The option is off by default. When off, its hooks return after one static check: in a JFR profile of the dev benchmark
+they appear in 2 of 12,015 samples. Three dev benchmark runs on the same day (EMI alone 1.208 ms idle; with the mod
+1.137 and 1.080 ms) differ by up to 7% between identical runs, which covers the differences to the older numbers above.
+When the option is on, the cost is whatever EMI draws at the chosen scale: a smaller scale shows more stacks (54 → 276 in
+the self-test window) and draws them all.
+
 ## EMI fix included
 
 EMI's tag search (`#tag`, NEI's `$tag`) fills `EmiTagKey.CACHE`, a plain `HashMap`, from its search thread while the

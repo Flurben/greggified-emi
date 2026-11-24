@@ -12,6 +12,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import com.greggifiedemi.bookmark.AutoCrafting;
@@ -21,6 +22,7 @@ import com.greggifiedemi.chain.RecipeKey;
 import com.greggifiedemi.network.ChatLinksClient;
 import com.greggifiedemi.nei.HistoryPanel;
 import com.greggifiedemi.nei.ItemZoom;
+import com.greggifiedemi.scale.EmiScale;
 import com.greggifiedemi.nei.RecipeKeys;
 
 import dev.emi.emi.api.EmiApi;
@@ -38,6 +40,7 @@ public final class ClientSetup {
     public static void init() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::registerKeys);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::onConfigLoaded);
         MinecraftForge.EVENT_BUS.addListener(ClientSetup::onClientTick);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, ClientSetup::onRenderPost);
         MinecraftForge.EVENT_BUS.addListener(ClientSetup::onLoggingOut);
@@ -65,6 +68,12 @@ public final class ClientSetup {
 
     private static void registerKeys(RegisterKeyMappingsEvent event) {
         Keys.ALL.forEach(event::register);
+    }
+
+    private static void onConfigLoaded(ModConfigEvent event) {
+        if (event.getConfig().getSpec() == Config.SPEC) {
+            EmiScale.reloadSettings();
+        }
     }
 
     private static void onClientTick(TickEvent.ClientTickEvent event) {

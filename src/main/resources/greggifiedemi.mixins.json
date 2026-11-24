@@ -13,7 +13,15 @@
     "RecipeScreenAccessor",
     "ScreenSpaceMixin",
     "SidebarPanelMixin",
-    "SlotWidgetMixin"
+    "SlotWidgetMixin",
+    "scale.ConfigScreenScaleMixin",
+    "scale.DragDropScaleMixin",
+    "scale.ExclusionAreasScaleMixin",
+    "scale.ScreenBaseScaleMixin",
+    "scale.ScreenManagerInvoker",
+    "scale.ScreenManagerScaleMixin",
+    "scale.StackProvidersScaleMixin",
+    "scale.TooltipScaleMixin"
   ],
   "injectors": {
     "defaultRequire": 1

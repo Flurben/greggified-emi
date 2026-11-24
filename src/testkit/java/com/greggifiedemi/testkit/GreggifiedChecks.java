@@ -38,6 +38,8 @@ final class GreggifiedChecks {
     private static int wait;
     private static int group = -1;
     private static List<? extends EmiIngredient> before;
+    private static dev.emi.emi.api.widget.Bounds scaleBounds;
+    private static int scalePageSize;
 
     private GreggifiedChecks() {}
 
@@ -174,6 +176,60 @@ final class GreggifiedChecks {
                     BookmarkStorage.grid().removeGroup(group);
                 }
             }
+            case 10 -> {
+                // detached EMI GUI scale: options in EMI's config screen, then a smaller EMI scale
+                final net.minecraft.client.gui.screens.Screen screen = minecraft.screen;
+                scaleBounds = dev.emi.emi.screen.EmiScreenBase.of(screen).bounds();
+                scalePageSize = EmiScreenManager.getPanelFor(SidebarSide.RIGHT).space.pageSize;
+                minecraft.setScreen(new dev.emi.emi.screen.ConfigScreen(screen));
+            }
+            case 11 -> {
+                final var config = (dev.emi.emi.screen.ConfigScreen) minecraft.screen;
+                Testkit.check(config.list.children().stream()
+                        .filter(e -> e instanceof dev.emi.emi.screen.widget.config.ConfigEntryWidget)
+                        .map(e -> ((dev.emi.emi.screen.widget.config.ConfigEntryWidget) e).getSearchableText())
+                        .filter(t -> t.equals("Detach GUI Scale") || t.equals("EMI GUI Scale")).count() == 2,
+                        "EMI's config screen lists the GUI scale options");
+                final int game = (int) minecraft.getWindow().getGuiScale();
+                Testkit.check(game > 1, "game GUI scale " + game + " leaves room for a smaller EMI scale");
+                Config.setGuiScale(true, game - 1);
+                final net.minecraft.client.gui.screens.Screen screen = config;
+                screen.onClose();
+            }
+            case 12 -> {
+                final net.minecraft.client.gui.screens.Screen screen = minecraft.screen;
+                final var right = EmiScreenManager.getPanelFor(SidebarSide.RIGHT);
+                final double k = (double) com.greggifiedemi.scale.EmiScale.emiScale()
+                        / minecraft.getWindow().getGuiScale();
+                Testkit.check(com.greggifiedemi.scale.EmiScale.isScaled(), "EMI uses its own GUI scale in the pack");
+                Testkit.check(screen.width == minecraft.getWindow().getGuiScaledWidth()
+                        && dev.emi.emi.screen.EmiScreenBase.of(screen).bounds().equals(scaleBounds),
+                        "the inventory kept the game's GUI scale in the pack");
+                Testkit.check(right.space.pageSize > scalePageSize,
+                        "the item list shows more stacks (" + scalePageSize + " -> " + right.space.pageSize + ")");
+                final var first = right.space.getPage(right.page).get(0);
+                Testkit.moveMouse((right.space.tx + 9) * k, (right.space.ty + 9) * k);
+                Testkit.check(!first.isEmpty() && EmiApi.getHoveredStack(false).getStack().getEmiStacks().get(0)
+                        .isEqual(first.getEmiStacks().get(0)), "the scaled item list stack under the cursor is hovered");
+            }
+            case 13 -> {
+                shot(minecraft, "detached-scale");
+                EmiApi.displayRecipes(heaviest());
+            }
+            case 14 -> {
+                Testkit.check(minecraft.screen instanceof RecipeScreen, "recipe view opened with the detached scale");
+                final net.minecraft.client.gui.screens.Screen screen = minecraft.screen;
+                Testkit.check(screen.width == minecraft.getWindow().getGuiScaledWidth(),
+                        "the recipe view kept the game's GUI scale in the pack");
+            }
+            case 15 -> {
+                shot(minecraft, "detached-scale-recipes");
+                Config.setGuiScale(false, 0);
+                minecraft.setScreen(new InventoryScreen(minecraft.player));
+            }
+            case 16 -> Testkit.check(!com.greggifiedemi.scale.EmiScale.isScaled()
+                    && EmiScreenManager.getPanelFor(SidebarSide.RIGHT).space.pageSize == scalePageSize,
+                    "attaching the scale restored the layout in the pack");
             default -> {
                 step = -1;
                 return true;
