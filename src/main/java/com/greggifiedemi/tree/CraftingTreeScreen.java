@@ -843,4 +843,14 @@ public final class CraftingTreeScreen extends Screen {
         return this.grid;
     }
 
+    /** Number of nodes in the tree (for tests). */
+    public int nodeCount() {
+        return this.canvas.graph.items.size();
+    }
+
+    /** Number of roots, one per chain result (for tests). */
+    public int rootCount() {
+        return this.canvas.graph.roots.size();
+    }
+
 }

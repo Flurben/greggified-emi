@@ -1,6 +1,8 @@
 package com.greggifiedemi;
 
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,13 +18,18 @@ import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
+import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.widget.Bounds;
+import dev.emi.emi.api.widget.RecipeFillButtonWidget;
+import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.Widget;
 import dev.emi.emi.api.widget.WidgetHolder;
+import dev.emi.emi.screen.EmiScreenManager;
+import dev.emi.emi.screen.WidgetGroup;
 
 /**
- * EMI plugin: adds NEI's "Use for recipe tree" button (TreeOverlayButton) to recipes while the crafting tree waits for
- * a replacement recipe. The widget is invisible and inert at all other times.
+ * EMI plugin: decorates every recipe with NEI's "Use for recipe tree" button (TreeOverlayButton, shown only while the
+ * crafting tree waits for a replacement recipe) and NEI's present-ingredient highlight on the fill button.
  */
 @EmiEntrypoint
 public class GreggifiedEmiPlugin implements EmiPlugin {
@@ -35,6 +42,72 @@ public class GreggifiedEmiPlugin implements EmiPlugin {
     private static void decorate(EmiRecipe recipe, WidgetHolder widgets) {
         if (recipe.getId() != null && widgets.getWidth() >= 12) {
             widgets.add(new TreeButton(recipe, widgets.getWidth() - 9, widgets.getHeight() - 9));
+        }
+
+        if (widgets instanceof WidgetGroup group) {
+            widgets.add(new PresenceHighlight(recipe, group));
+        }
+    }
+
+    /**
+     * NEI's "Highlight Present Item" (inventory.guirecipe.slotHighlightPresent): while the fill button of a recipe is
+     * hovered, ingredients the player already has are tinted green. EMI tints the missing ones red but leaves its
+     * green tint commented out.
+     */
+    private static final class PresenceHighlight extends Widget {
+
+        private final EmiRecipe recipe;
+        private final WidgetGroup group;
+
+        PresenceHighlight(EmiRecipe recipe, WidgetGroup group) {
+            this.recipe = recipe;
+            this.group = group;
+        }
+
+        @Override
+        public Bounds getBounds() {
+            return Bounds.EMPTY;
+        }
+
+        @Override
+        public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+            if (!Config.slotHighlightPresent() || EmiScreenManager.lastPlayerInventory == null) {
+                return;
+            }
+
+            boolean hovered = false;
+
+            for (Widget widget : this.group.widgets) {
+                if (widget instanceof RecipeFillButtonWidget && widget.getBounds().contains(mouseX, mouseY)) {
+                    hovered = true;
+                    break;
+                }
+            }
+
+            if (!hovered) {
+                return;
+            }
+
+            final List<Boolean> available = EmiScreenManager.lastPlayerInventory.getCraftAvailability(this.recipe);
+            final List<EmiIngredient> inputs = this.recipe.getInputs();
+
+            if (available.size() != inputs.size()) {
+                return;
+            }
+
+            final Map<EmiIngredient, Boolean> present = new IdentityHashMap<>();
+
+            for (int i = 0; i < inputs.size(); i++) {
+                present.put(inputs.get(i), available.get(i));
+            }
+
+            for (Widget widget : this.group.widgets) {
+                if (widget instanceof SlotWidget slot && slot.getRecipe() == null
+                        && Boolean.TRUE.equals(present.get(slot.getStack())) && !slot.getStack().isEmpty()) {
+                    final Bounds bounds = slot.getBounds();
+                    graphics.fill(bounds.x(), bounds.y(), bounds.right(), bounds.bottom(), 0x4400FF00);
+                }
+            }
         }
     }
 

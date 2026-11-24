@@ -19,6 +19,7 @@ import com.greggifiedemi.bookmark.BookmarkPanel;
 import com.greggifiedemi.bookmark.BookmarkStorage;
 import com.greggifiedemi.chain.RecipeKey;
 import com.greggifiedemi.network.ChatLinksClient;
+import com.greggifiedemi.nei.HistoryPanel;
 import com.greggifiedemi.nei.ItemZoom;
 import com.greggifiedemi.nei.RecipeKeys;
 
@@ -74,6 +75,7 @@ public final class ClientSetup {
         try {
             AutoCrafting.tick();
             BookmarkStorage.tick();
+            HistoryPanel.sync();
         } catch (RuntimeException e) {
             GreggifiedEmi.LOGGER.error("Bookmark tick failed", e);
         }

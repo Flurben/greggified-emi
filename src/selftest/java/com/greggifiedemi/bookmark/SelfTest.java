@@ -51,7 +51,9 @@ import dev.emi.emi.api.widget.Widget;
 import dev.emi.emi.bom.BoM;
 import dev.emi.emi.config.SidebarSide;
 import dev.emi.emi.runtime.EmiReloadManager;
+import dev.emi.emi.config.EmiConfig;
 import dev.emi.emi.screen.EmiScreenManager;
+import dev.emi.emi.search.EmiSearch;
 import dev.emi.emi.screen.EmiScreenManager.SidebarPanel;
 import dev.emi.emi.screen.RecipeScreen;
 import dev.emi.emi.screen.WidgetGroup;
@@ -76,6 +78,7 @@ public final class SelfTest {
     private static int chainGroup;
     private static int axeGroup;
     private static long planksBefore;
+    private static int treeGroup;
     private static final List<String> failures = new ArrayList<>();
 
     private SelfTest() {}
@@ -652,13 +655,12 @@ public final class SelfTest {
                             && InventoryStacks.count(carried, "item:minecraft:golden_axe") == 1,
                             "worn and renamed axes count as the recipe's axes " + carried.keySet());
 
-                    // Shift + click on the bookmark fills the crafting grid
+                    // NEI: Shift + S over the bookmark fills the crafting grid
                     final ChainItem result = recipeItem(grid, AXE_PLANKS, ChainItem.Type.RESULT);
                     check(result != null, "the axe recipe is bookmarked");
-                    final double[] pos = moveTo(result);
+                    moveTo(result);
                     TestInput.hold(GLFW.GLFW_KEY_LEFT_SHIFT);
-                    EmiScreenManager.mouseClicked(pos[0], pos[1], 0);
-                    EmiScreenManager.mouseReleased(pos[0], pos[1], 0);
+                    check(key(GLFW.GLFW_KEY_S, 31), "Shift + S over the bookmark consumed");
                     TestInput.release();
                 }
                 case 46 -> {
@@ -666,11 +668,11 @@ public final class SelfTest {
                     final boolean log = slots.subList(1, 5).stream().anyMatch(slot -> slot.getItem().is(Items.BIRCH_LOG));
                     final boolean axe = slots.subList(1, 5).stream()
                             .anyMatch(slot -> slot.getItem().is(Items.STONE_AXE) || slot.getItem().is(Items.GOLDEN_AXE));
-                    check(log && axe, "Shift + click filled the crafting grid with a log and a worn axe");
+                    check(log && axe, "Shift + S filled the crafting grid with a log and a worn axe");
                     moveMouse(5, 5);
                 }
                 case 47 -> {
-                    screenshot("20-shift-click-fill");
+                    screenshot("20-shift-s-fill");
                     final ChainItem result = recipeItem(grid, AXE_PLANKS, ChainItem.Type.RESULT);
                     moveTo(result);
                     TestInput.hold(GLFW.GLFW_KEY_LEFT_SHIFT);
@@ -760,6 +762,129 @@ public final class SelfTest {
                 }
                 case 63 -> {
                     screenshot("18-ungrouped");
+                    // NEI search syntax: &identifier, $tag (NEI's ore dictionary), #tooltip
+                    EmiScreenManager.search.setValue("&minecraft:torch");
+                }
+                case 64 -> {
+                    final var found = EmiSearch.stacks;
+                    check(!found.isEmpty() && found.stream().allMatch(stack -> stack.getEmiStacks().get(0).getId()
+                            .toString().contains("torch")), "&minecraft:torch finds only torches (" + found.size() + ")");
+                    EmiScreenManager.search.setValue("$minecraft:logs");
+                }
+                case 65 -> {
+                    final var found = EmiSearch.stacks;
+                    check(found.stream().anyMatch(stack -> stack.getEmiStacks().get(0).getKey() == Items.OAK_LOG)
+                            && found.stream().noneMatch(stack -> stack.getEmiStacks().get(0).getKey() == Items.DIAMOND),
+                            "$minecraft:logs searches the tag like NEI's $ore dictionary (" + found.size() + ")");
+                    EmiScreenManager.search.setValue("");
+                    EmiScreenManager.search.setFocused(false);
+                    minecraft.screen.setFocused(null);
+                    moveMouse(5, 5);
+                    // F (no modifiers) focuses the search bar
+                    check(key(GLFW.GLFW_KEY_F, 33), "F consumed");
+                    check(EmiScreenManager.search.isFocused(), "F focused EMI's search bar");
+                    EmiScreenManager.search.setFocused(false);
+                    minecraft.screen.setFocused(null);
+                }
+                case 66 -> {
+                    // O hides and shows EMI, also while hidden
+                    check(key(GLFW.GLFW_KEY_O, 24) && !EmiConfig.enabled, "O hid EMI");
+                    check(key(GLFW.GLFW_KEY_O, 24) && EmiConfig.enabled, "O showed EMI again");
+                    // NEI's history panel is EMI's lookup history, shown under the index
+                    check(EmiConfig.rightSidebarSubpanels.subpanels.stream()
+                            .anyMatch(sub -> sub.type == dev.emi.emi.config.SidebarType.LOOKUP_HISTORY),
+                            "the history panel sits under the index");
+                    check(!dev.emi.emi.runtime.EmiSidebars.lookupHistory.isEmpty(),
+                            "looking up recipes filled the history");
+                    final java.nio.file.Path css = minecraft.gameDirectory.toPath().resolve("config/emi.css");
+                    check(!java.nio.file.Files.readString(css).contains("lookup-history"),
+                            "the history subpanel was not written to emi.css");
+                }
+                case 67 -> {
+                    screenshot("23-history-panel");
+                    // Shift + Z toggles item zoom; the zoomed item draws beside the GUI
+                    final boolean zoom = com.greggifiedemi.Config.itemZoom();
+                    TestInput.hold(GLFW.GLFW_KEY_LEFT_SHIFT);
+                    check(key(GLFW.GLFW_KEY_Z, 44), "Shift + Z consumed");
+                    TestInput.release();
+                    check(com.greggifiedemi.Config.itemZoom() != zoom, "Shift + Z toggled item zoom");
+                    if (!com.greggifiedemi.Config.itemZoom()) {
+                        com.greggifiedemi.Config.setItemZoom(true);
+                    }
+                    moveToIndexStack(EmiStack.of(Items.TORCH));
+                }
+                case 68 -> {
+                    screenshot("24-item-zoom");
+                    // Page Down over the index turns its page
+                    final SidebarPanel right = EmiScreenManager.getPanelFor(SidebarSide.RIGHT);
+                    moveMouse(right.space.tx + 9, right.space.ty + 9);
+                    final int page = right.page;
+                    check(key(GLFW.GLFW_KEY_PAGE_DOWN, 337), "Page Down over the index consumed");
+                    check(right.page != page, "Page Down turned the index page");
+                    check(key(GLFW.GLFW_KEY_PAGE_UP, 329) && right.page == page, "Page Up turned it back");
+                }
+                case 69 -> {
+                    // Shift + F over an item in the index saves its favorite recipe tree as a crafting chain
+                    GreggifiedEmi.LOGGER.info("[selftest] torch recipes: {}", EmiApi.getRecipeManager()
+                            .getRecipesByOutput(EmiStack.of(Items.TORCH)).stream()
+                            .map(r -> r.getId() + "/" + r.supportsRecipeTree()).toList());
+                    final int groups = grid.getGroups().size();
+                    moveToIndexStack(EmiStack.of(Items.TORCH));
+                    TestInput.hold(GLFW.GLFW_KEY_LEFT_SHIFT);
+                    check(key(GLFW.GLFW_KEY_F, 33), "Shift + F over the index consumed");
+                    TestInput.release();
+                    check(grid.getGroups().size() == groups + 1, "Shift + F added a group");
+                    treeGroup = grid.getNextGroupId() - 1;
+                    final var torchKey = com.greggifiedemi.chain.RecipeKey.of(recipe("minecraft:torch"));
+                    check(grid.isCraftingMode(treeGroup) && grid.existsRecipe(torchKey, treeGroup),
+                            "the new group is a crafting chain with the torch recipe");
+                    grid.shiftRecipeAmount(treeGroup, torchKey, 2);
+                    addRecipe(grid, "minecraft:stick", treeGroup, 0);
+                }
+                case 70 -> {
+                    screenshot("25-favorite-tree-group");
+                    // T over the group opens NEI's crafting tree
+                    final BookmarkPanel.PanelSpace space = panel();
+                    moveMouse(gutterX(space), rowY(space, firstRowOf(space, treeGroup)));
+                    check(key(GLFW.GLFW_KEY_T, 20), "T over the chain group consumed");
+                    check(minecraft.screen instanceof com.greggifiedemi.tree.CraftingTreeScreen,
+                            "T opened the crafting tree");
+                }
+                case 71 -> {
+                    final var tree = (com.greggifiedemi.tree.CraftingTreeScreen) minecraft.screen;
+                    check(tree.rootCount() == 1, "the tree has one root (torch), got " + tree.rootCount());
+                    check(tree.nodeCount() >= 3, "the tree shows the torch's ingredients and the stick's, got "
+                            + tree.nodeCount());
+                    moveMouse(tree.width / 2.0, tree.height / 2.0);
+                }
+                case 72 -> {
+                    screenshot("26-crafting-tree");
+                    final var tree = (com.greggifiedemi.tree.CraftingTreeScreen) minecraft.screen;
+                    tree.mouseScrolled(tree.width / 2.0, tree.height / 2.0, 1);
+                    tree.keyPressed(GLFW.GLFW_KEY_ESCAPE, 1, 0);
+                    check(minecraft.screen instanceof InventoryScreen, "Escape left the tree for the inventory");
+                    EmiApi.displayUses(EmiStack.of(Items.OAK_PLANKS));
+                }
+                case 73 -> {
+                    // NEI's recipe keys: Right = next page, Down = next category ("machine")
+                    final var screen = minecraft.screen;
+                    check(screen instanceof dev.emi.emi.screen.RecipeScreen, "uses of planks opened");
+                    final var accessor = (com.greggifiedemi.mixin.RecipeScreenAccessor) screen;
+                    final long window = minecraft.getWindow().getWindow();
+                    final int tab = accessor.greggifiedemi$getTab();
+                    final int page = accessor.greggifiedemi$getPage();
+                    minecraft.keyboardHandler.keyPress(window, GLFW.GLFW_KEY_RIGHT, 333, GLFW.GLFW_PRESS, 0);
+                    minecraft.keyboardHandler.keyPress(window, GLFW.GLFW_KEY_RIGHT, 333, GLFW.GLFW_RELEASE, 0);
+                    check(accessor.greggifiedemi$getTab() == tab && accessor.greggifiedemi$getPage() != page,
+                            "Right turned the recipe page, not the category");
+                    minecraft.keyboardHandler.keyPress(window, GLFW.GLFW_KEY_DOWN, 336, GLFW.GLFW_PRESS, 0);
+                    minecraft.keyboardHandler.keyPress(window, GLFW.GLFW_KEY_DOWN, 336, GLFW.GLFW_RELEASE, 0);
+                    check(accessor.greggifiedemi$getTab() != tab && accessor.greggifiedemi$getPage() == 0,
+                            "Down switched to the next category");
+                }
+                case 74 -> {
+                    screenshot("27-recipe-keys");
+                    minecraft.setScreen(new InventoryScreen(minecraft.player));
                     GreggifiedEmi.LOGGER.info("[selftest] done, {} failure(s): {}", failures.size(), failures);
                     minecraft.stop();
                 }
@@ -791,18 +916,26 @@ public final class SelfTest {
     /** Puts the mouse over a stack on the item list's current page, or returns null when it is not shown. */
     private static double[] moveToIndexStack(EmiStack stack) throws ReflectiveOperationException {
         final SidebarPanel right = EmiScreenManager.getPanelFor(SidebarSide.RIGHT);
-        final List<? extends EmiIngredient> page = right.space.getPage(right.page);
+        final int pages = Math.max(1, (right.space.getStacks().size() + right.space.pageSize - 1)
+                / Math.max(1, right.space.pageSize));
 
-        for (int index = 0; index < page.size(); index++) {
-            if (!page.get(index).isEmpty() && page.get(index).getEmiStacks().get(0).isEqual(stack)) {
-                final double x = right.space.getRawX(index) + 9;
-                final double y = right.space.getRawY(index) + 9;
-                moveMouse(x, y);
-                return new double[] { x, y };
+        // turn the index to the page that shows the stack, like a player would
+        for (int p = 0; p < pages; p++) {
+            final int pageIndex = (right.page + p) % pages;
+            final List<? extends EmiIngredient> page = right.space.getPage(pageIndex);
+
+            for (int index = 0; index < page.size(); index++) {
+                if (!page.get(index).isEmpty() && page.get(index).getEmiStacks().get(0).isEqual(stack)) {
+                    right.page = pageIndex;
+                    final double x = right.space.getRawX(index) + 9;
+                    final double y = right.space.getRawY(index) + 9;
+                    moveMouse(x, y);
+                    return new double[] { x, y };
+                }
             }
         }
 
-        return null;
+        throw new IllegalStateException("Not in the index: " + stack);
     }
 
     /** Puts the mouse over the output slot of a recipe shown in EMI's recipe view. */
