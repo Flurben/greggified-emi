@@ -14,6 +14,8 @@
     "ScreenSpaceMixin",
     "SidebarPanelMixin",
     "SlotWidgetMixin",
+    "perf.EmiDataRegexMixin",
+    "perf.EmiSearchBakeMixin",
     "scale.ConfigScreenScaleMixin",
     "scale.DragDropScaleMixin",
     "scale.ExclusionAreasScaleMixin",

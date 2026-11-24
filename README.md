@@ -29,6 +29,9 @@ The full NEI-by-NEI comparison is in [docs/PARITY.md](docs/PARITY.md), performan
 - **Separate GUI scale for EMI** (not in NEI, off by default): EMI's config screen → UI → *Detach GUI Scale* and
   *EMI GUI Scale* draw the item list, bookmarks, history and search bar at their own scale (e.g. a smaller one to see
   more items), while inventories, the recipe view and tooltips stay at the game's GUI scale.
+- **Faster EMI reloads** (not in NEI): EMI's search index is built in parallel, and data-pack filter regexes such
+  as TFG's `/.+wireless_ammo_box.*/` are matched in linear time. Same results; see
+  [docs/PERFORMANCE.md](docs/PERFORMANCE.md).
 - Bookmarks from *GTNH Bookmarks for EMI* are imported on first start (don't install both).
 
 ## Controls
@@ -87,6 +90,7 @@ in the search field jump between matches, click a stats entry to highlight it in
 - **layout**: NEI search syntax, NEI recipe keys, history panel and its rows, present-item highlight, detached EMI
   GUI scale (`detachGuiScale`, `guiScale`: 0 = Auto). The last two are also in EMI's config screen under UI.
 - **itemzoom**: enabled, EMI panels only, preferred side, help text, zoom amount, name and colour.
+- **performance**: `emiParallelSearch`, `emiFastRegexFilters` (both on).
 - auto-crafting on/off, hotkey list on/off, "Hold ALT" hint on/off.
 
 Bookmarks are saved to `greggifiedemi/bookmarks.json` in the game directory (or `greggifiedemi/worlds/<world>/` when
@@ -96,7 +100,7 @@ per-world).
 
 ```
 ./gradlew build                                  # jar in build/libs, runs the unit tests
-./gradlew runClient -Pselftest                   # scripted in-game test (138 checks), then quits
+./gradlew runClient -Pselftest                   # scripted in-game test (140 checks), then quits
 ./gradlew runClient -Pbenchmark [-Pbaseline] [-Pbenchsize=600]   # frame timings, with and without the mod
 ./gradlew testkitJar                             # dev-only pack test harness (see docs/PERFORMANCE.md)
 ```

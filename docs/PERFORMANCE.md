@@ -62,6 +62,34 @@ they appear in 2 of 12,015 samples. Three dev benchmark runs on the same day (EM
 When the option is on, the cost is whatever EMI draws at the chosen scale: a smaller scale shows more stacks (54 → 276 in
 the self-test window) and draws them all.
 
+## EMI load-time fixes
+
+Ported from the owner's TFG performance mod (`tfgperffixes`, options `emiParallelSearch` and `emiFastRegexFilters`),
+only the client-side fixes that touch EMI alone. Both are on by default (`[performance]` in the config).
+
+- **Parallel search bake:** EMI sorts its four search suffix arrays (names, tooltips, mods, aliases) one after
+  another; they now sort at the same time. The original fix hooked `SuffixArray.generate()`, and its worker thread ran
+  through that same hook, so it could wait on its own task forever: EMI name searches then never returned (the hang
+  seen in the perf-test instance). Here EMI is handed a `SuffixArray` subclass whose worker calls `super.generate()`.
+- **Linear-time filter regexes:** EMI's data-pack filters run `find()` for every recipe; TFG's `/.+wireless_ammo_box.*/`
+  and `/.+crafting/tipped_arrow/.+/` make that quadratic. For patterns that start with `.+`/`.*` (no top-level `|`, no
+  `\G`) and inputs without line breaks, `find()` equals an anchored match, which is linear. Unit-tested against
+  `find()` on TFG's own filters and 2,000 random patterns.
+
+TFG 0.13.17, testkit, fixes on and off alternating, three runs each:
+
+| | fixes off | fixes on | change |
+| --- | --- | --- | --- |
+| "Reloaded EMI in" after joining | 33.6, 33.5, 34.7 s (mean 33.9) | 29.6, 29.3, 29.5 s (mean 29.5) | **−4.5 s (−13%)** |
+| EMI ready after joining (testkit) | 31.1, 30.9, 32.1 s | 27.1, 26.7, 27.0 s | **−4.4 s (−14%)** |
+| Filter matches on the linear path | — | 360,264–360,290 | |
+
+All feature checks passed in all six runs. TFG's own index is not exactly the same from launch to launch (recipe count
+177,068–177,086, and a few stacks more or less for "iron" and "plate" even between runs with the fixes off), so the
+search match counts cannot show equivalence; it follows from the fixes doing the same work on the same data.
+
+TFC's `tfcFoodProbeCache` from the same mod was left out: it speeds up EMI's reload too, but it patches TFC, not EMI.
+
 ## EMI fix included
 
 EMI's tag search (`#tag`, NEI's `$tag`) fills `EmiTagKey.CACHE`, a plain `HashMap`, from its search thread while the

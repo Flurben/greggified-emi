@@ -112,6 +112,8 @@ EMI must not get slower. Rules:
 8. Owner request (not NEI): detached EMI GUI scale. EMI's sidebars run in a virtual "EMI space" at their own
    scale; inventories, the recipe view and tooltips keep the game's. Options in EMI's config screen, stored in this
    mod's config. ✅
+9. EMI load-time fixes from the owner's TFG performance mod: parallel search bake (with its self-wait hang fixed)
+   and linear-time filter regexes. ✅
 
 Not ported (see PARITY.md): tooltip pages (Z), group chat links, the tree's stats-section menu / chat link / PNG export,
 NEI's 1.7.10 cheat utilities and subsets dropdown.

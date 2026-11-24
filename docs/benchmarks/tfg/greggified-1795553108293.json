@@ -1,0 +1,170 @@
+{
+  "emi_ready_after_join_ms": 27051.877,
+  "index_size": 22959,
+  "recipe_count": 177070,
+  "frames: inventory, mouse idle": {
+    "frames": 707,
+    "frame_ms": {
+      "mean": 4.163,
+      "p50": 4.097,
+      "p95": 4.871,
+      "p99": 5.21,
+      "max": 6.676
+    },
+    "screen_ms": {
+      "mean": 2.649,
+      "p50": 2.606,
+      "p95": 3.046,
+      "p99": 3.455,
+      "max": 5.297
+    }
+  },
+  "frames: inventory, mouse idle, history panel off": {
+    "frames": 703,
+    "frame_ms": {
+      "mean": 4.196,
+      "p50": 4.018,
+      "p95": 4.704,
+      "p99": 6.041,
+      "max": 54.608
+    },
+    "screen_ms": {
+      "mean": 2.563,
+      "p50": 2.52,
+      "p95": 2.947,
+      "p99": 3.599,
+      "max": 9.016
+    }
+  },
+  "frames: inventory, hover index stack": {
+    "frames": 712,
+    "frame_ms": {
+      "mean": 4.047,
+      "p50": 3.975,
+      "p95": 4.543,
+      "p99": 5.029,
+      "max": 14.024
+    },
+    "screen_ms": {
+      "mean": 2.621,
+      "p50": 2.574,
+      "p95": 2.932,
+      "p99": 3.474,
+      "max": 12.261
+    }
+  },
+  "frames: inventory, hover index stack, item zoom off": {
+    "frames": 712,
+    "frame_ms": {
+      "mean": 3.951,
+      "p50": 3.872,
+      "p95": 4.443,
+      "p99": 4.694,
+      "max": 32.754
+    },
+    "screen_ms": {
+      "mean": 2.464,
+      "p50": 2.436,
+      "p95": 2.788,
+      "p99": 2.974,
+      "max": 3.984
+    }
+  },
+  "frames: inventory, page through index": {
+    "frames": 677,
+    "frame_ms": {
+      "mean": 4.492,
+      "p50": 3.871,
+      "p95": 6.602,
+      "p99": 18.48,
+      "max": 48.378
+    },
+    "screen_ms": {
+      "mean": 2.895,
+      "p50": 2.233,
+      "p95": 4.843,
+      "p99": 16.427,
+      "max": 46.69
+    }
+  },
+  "open_recipes_ms": {
+    "mean": 7.577,
+    "p50": 4.93,
+    "p95": 18.291,
+    "p99": 18.291,
+    "max": 18.291
+  },
+  "open_recipes_targets": [
+    "tfg:flora_pellets",
+    "minecraft:bucket",
+    "minecraft:iron_ingot",
+    "minecraft:redstone",
+    "minecraft:copper_ingot",
+    "minecraft:emerald",
+    "minecraft:quartz",
+    "minecraft:glowstone_dust",
+    "minecraft:gold_ingot",
+    "minecraft:stick"
+  ],
+  "frames: recipe view": {
+    "frames": 707,
+    "frame_ms": {
+      "mean": 3.225,
+      "p50": 3.184,
+      "p95": 3.669,
+      "p99": 3.94,
+      "max": 6.248
+    },
+    "screen_ms": {
+      "mean": 1.973,
+      "p50": 1.946,
+      "p95": 2.233,
+      "p99": 2.435,
+      "max": 5.131
+    }
+  },
+  "search_matches: ingot": 301,
+  "search_matches: plate": 581,
+  "search_matches: iron": 667,
+  "search_matches: @minecraft": 641,
+  "search_matches: steel rod": 25,
+  "search_matches: -ore dust": 1772,
+  "search_matches: /ingot$/": 271,
+  "search_ms": {
+    "mean": 46.55,
+    "p50": 1.837,
+    "p95": 318.067,
+    "p99": 351.706,
+    "max": 351.706
+  },
+  "mode": "greggified",
+  "checks": [
+    "PASS EMI\u0027s search index is built in parallel",
+    "PASS EMI\u0027s recipe filter regexes took the linear path (360264 matches)",
+    "PASS history panel added under the index",
+    "PASS looking up recipes filled the history",
+    "PASS \u0026minecraft: finds only minecraft ids (641)",
+    "PASS $forge:ingots finds the ingots tag (180)",
+    "PASS #tooltip search finished with results (43)",
+    "PASS A over the index consumed",
+    "PASS A toggled the bookmark",
+    "PASS found a two-level crafting chain in the pack",
+    "PASS crafting tree opened",
+    "PASS tree has nodes (3) and roots (1)",
+    "PASS closing the tree returns to the inventory",
+    "PASS recipe view opened",
+    "PASS Right turns the recipe page in the pack",
+    "PASS Down switches the category in the pack",
+    "PASS item zoom is on by default",
+    "PASS EMI\u0027s config screen lists the GUI scale options",
+    "PASS game GUI scale 2 leaves room for a smaller EMI scale",
+    "PASS EMI uses its own GUI scale in the pack",
+    "PASS the inventory kept the game\u0027s GUI scale in the pack",
+    "PASS the item list shows more stacks (47 -\u003e 207)",
+    "PASS the scaled item list stack under the cursor is hovered",
+    "PASS recipe view opened with the detached scale",
+    "PASS the recipe view kept the game\u0027s GUI scale in the pack",
+    "PASS attaching the scale restored the layout in the pack"
+  ],
+  "check_failures": 0
+}

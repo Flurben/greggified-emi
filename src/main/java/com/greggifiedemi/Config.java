@@ -31,6 +31,8 @@ public final class Config {
     private static final ForgeConfigSpec.IntValue HISTORY_ROWS;
     private static final ForgeConfigSpec.BooleanValue HIGHLIGHT_PRESENT;
     private static final ForgeConfigSpec.BooleanValue DETACH_SCALE;
+    private static final ForgeConfigSpec.BooleanValue PARALLEL_SEARCH;
+    private static final ForgeConfigSpec.BooleanValue FAST_REGEX;
     private static final ForgeConfigSpec.IntValue EMI_SCALE;
     private static final ForgeConfigSpec.BooleanValue ZOOM_ENABLED;
     private static final ForgeConfigSpec.BooleanValue ZOOM_NEI_ONLY;
@@ -103,6 +105,14 @@ public final class Config {
         ZOOM_SHOW_NAME = builder.comment("Show the item name below the zoomed item.").define("showName", true);
         ZOOM_NAME_COLOR = builder.comment("Color of the name (ARGB).").defineInRange("nameColor", 0xFFFFFFFF,
                 Integer.MIN_VALUE, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("performance");
+        PARALLEL_SEARCH = builder.comment("Build EMI's four search indexes (names, tooltips, mods, aliases) at the same "
+                + "time when EMI reloads, instead of one after another. Same index, shorter reload.")
+                .define("emiParallelSearch", true);
+        FAST_REGEX = builder.comment("Match EMI data-pack filter regexes that start with .+ or .* (such as TFG's "
+                + "recipe filters) in linear time. Same results, shorter reload.").define("emiFastRegexFilters", true);
         builder.pop();
 
         AUTOCRAFTING = builder.comment("Allow Shift + C to craft bookmarked recipes and crafting chains.")
@@ -227,6 +237,14 @@ public final class Config {
             SPEC.save();
         }
         com.greggifiedemi.scale.EmiScale.reloadSettings();
+    }
+
+    public static boolean emiParallelSearch() {
+        return get(PARALLEL_SEARCH::get, true);
+    }
+
+    public static boolean emiFastRegexFilters() {
+        return get(FAST_REGEX::get, true);
     }
 
     public static boolean itemZoom() {

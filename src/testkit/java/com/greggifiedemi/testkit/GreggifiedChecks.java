@@ -76,6 +76,16 @@ final class GreggifiedChecks {
 
         switch (step++) {
             case 0 -> {
+                // EMI load-time fixes (when switched on in the config)
+                if (Config.emiParallelSearch()) {
+                    Testkit.check(EmiSearch.names instanceof com.greggifiedemi.perf.ParallelSuffixArray<?>,
+                            "EMI's search index is built in parallel");
+                }
+                if (Config.emiFastRegexFilters()) {
+                    Testkit.check(com.greggifiedemi.perf.FastRegex.fastMatches() > 0,
+                            "EMI's recipe filter regexes took the linear path ("
+                                    + com.greggifiedemi.perf.FastRegex.fastMatches() + " matches)");
+                }
                 Testkit.check(EmiConfig.rightSidebarSubpanels.subpanels.stream()
                         .anyMatch(sub -> sub.type == SidebarType.LOOKUP_HISTORY)
                         || EmiConfig.leftSidebarSubpanels.subpanels.stream()

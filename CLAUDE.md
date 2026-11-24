@@ -36,8 +36,8 @@ on the owner's machine.
 | Command | What it does |
 | --- | --- |
 | `./gradlew build` | Compiles, runs the unit tests, and writes `build/libs/gtnh-bookmarks-for-emi-<version>.jar`. |
-| `./gradlew test` | Unit tests only (25): `RecipeChainMathTest` and `BookmarkGridTest`, pure Java, no Minecraft. |
-| `./gradlew runClient -Pselftest` | The scripted in-game test, which then quits. Check `run/logs/latest.log` for `[selftest]` lines and the final `[selftest] done, N failure(s)`. Currently 138 checks; screenshots go to `run/screenshots/selftest-*.png`. |
+| `./gradlew test` | Unit tests only (28): `RecipeChainMathTest`, `BookmarkGridTest`, `NeiSearchSyntaxTest`, `FastRegexTest`; pure Java, no Minecraft. |
+| `./gradlew runClient -Pselftest` | The scripted in-game test, which then quits. Check `run/logs/latest.log` for `[selftest]` lines and the final `[selftest] done, N failure(s)`. Currently 140 checks; screenshots go to `run/screenshots/selftest-*.png`. |
 | `... -Pselftest -Pfastbench` | The same with FastWorkbench and Placebo loaded. Their jars go in the git-ignored `compat-libs/` (names in `build.gradle`). |
 | `./gradlew testkitJar` | Builds `build/libs/greggified-emi-testkit-<v>.jar`, a dev-only mod for real packs: drop it into a pack (with an empty `greggified-testkit/enabled` file in the game dir), with and without the mod jar; it creates/loads a creative world, times EMI scenarios, runs feature checks and writes `greggified-testkit/<mode>-<time>.json`. |
 | `./gradlew runClient -Pbenchmark` | Frame and input timings to `run/benchmark/mod.json`. Add `-Pbaseline` for EMI alone (`baseline.json`), `-Pbenchsize=600` for a large list, and `-Pjfr` for a JFR profile. Log lines are tagged `[bench:<mode>]`. |
@@ -132,6 +132,12 @@ interactions.
   - **Rule:** a position is always in the *current* space. Code that compares it with the panel's geometry uses
     `EmiScale.emi()`, code that compares it with the screen (recipe view widgets, container bounds) uses
     `EmiScale.game()`. `EmiScreenManager.lastMouseX/Y` stay game coordinates (`EmiScale.fromGame()`).
+- **`perf/`**: EMI load-time fixes ported from the owner's TFG performance mod (`TFG Fixes/tfg-perf-fixes`), only
+  the client-side ones that touch EMI alone. `ParallelSuffixArray` (handed to `EmiSearch.bake` by
+  `mixin/perf/EmiSearchBakeMixin`, which redirects the constructor so no Minecraft method name is targeted; its worker
+  calls `super.generate()` so it can never wait on itself, the bug that froze the original) and `FastRegex`
+  (`mixin/perf/EmiDataRegexMixin`; unit-tested against `Matcher.find()`). TFC's food probe cache was left out: it
+  patches TFC, not EMI.
 - **`network/`**: `ChatLinks` and `ChatLinksClient`, for Ctrl + L item links. The channel is optional, and this is
   the only feature that needs the mod on the server.
 

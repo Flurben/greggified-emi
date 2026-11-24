@@ -1025,6 +1025,12 @@ public final class SelfTest {
                     check(!com.greggifiedemi.scale.EmiScale.isScaled()
                             && EmiScreenManager.getPanelFor(SidebarSide.RIGHT).space.pageSize == scalePageSize,
                             "attaching the scale again restored the layout");
+                    // EMI's search index was built by the parallel suffix arrays, and searching it works
+                    check(EmiSearch.names instanceof com.greggifiedemi.perf.ParallelSuffixArray<?>
+                            && EmiSearch.tooltips instanceof com.greggifiedemi.perf.ParallelSuffixArray<?>
+                            && EmiSearch.aliases instanceof com.greggifiedemi.perf.ParallelSuffixArray<?>,
+                            "EMI's search index is built in parallel");
+                    check(!EmiSearch.names.search("torch").isEmpty(), "the parallel search index finds torches");
                     GreggifiedEmi.LOGGER.info("[selftest] done, {} failure(s): {}", failures.size(), failures);
                     minecraft.stop();
                 }
