@@ -30,8 +30,8 @@ import com.greggifiedemi.chain.RecipeKey;
 public class BookmarkGrid {
 
     public static final int DEFAULT_GROUP_ID = 0;
-    /** Every recipe and item on its own row; new groups take the default group's mode. */
-    public static final BookmarkViewMode DEFAULT_VIEW_MODE = BookmarkViewMode.TODO_LIST;
+    /** NEI's default: the packed view; new groups take the default group's mode (favorite trees use to-do list). */
+    public static final BookmarkViewMode DEFAULT_VIEW_MODE = BookmarkViewMode.DEFAULT;
     public static final float SCALE_SPEED = 0.1f;
     private static final int MAX_CACHED_LAYOUTS = 4;
 

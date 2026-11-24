@@ -1,0 +1,248 @@
+{
+  "frames: inventory, mouse idle": {
+    "frames": 3835,
+    "frame_ms": {
+      "mean": 1.132,
+      "p50": 1.12,
+      "p95": 1.316,
+      "p99": 1.407,
+      "max": 3.122
+    },
+    "screen_ms": {
+      "mean": 0.752,
+      "p50": 0.739,
+      "p95": 0.904,
+      "p99": 0.986,
+      "max": 2.595
+    },
+    "screen_alloc_kb_mean": 309.07166720990875
+  },
+  "frames: inventory, hover bookmark item": {
+    "frames": 3555,
+    "frame_ms": {
+      "mean": 1.231,
+      "p50": 1.216,
+      "p95": 1.423,
+      "p99": 1.516,
+      "max": 3.231
+    },
+    "screen_ms": {
+      "mean": 0.846,
+      "p50": 0.831,
+      "p95": 1.011,
+      "p99": 1.096,
+      "max": 2.71
+    },
+    "screen_alloc_kb_mean": 350.67534722222223
+  },
+  "frames: inventory, hover bookmark recipe": {
+    "frames": 3561,
+    "frame_ms": {
+      "mean": 1.232,
+      "p50": 1.216,
+      "p95": 1.421,
+      "p99": 1.513,
+      "max": 2.853
+    },
+    "screen_ms": {
+      "mean": 0.853,
+      "p50": 0.837,
+      "p95": 1.024,
+      "p99": 1.113,
+      "max": 2.441
+    },
+    "screen_alloc_kb_mean": 350.74387900168495
+  },
+  "frames: inventory, hover bookmark recipe + Alt": {
+    "frames": 3070,
+    "frame_ms": {
+      "mean": 1.45,
+      "p50": 1.431,
+      "p95": 1.659,
+      "p99": 1.737,
+      "max": 3.054
+    },
+    "screen_ms": {
+      "mean": 1.065,
+      "p50": 1.047,
+      "p95": 1.254,
+      "p99": 1.333,
+      "max": 1.49
+    },
+    "screen_alloc_kb_mean": 475.2651542141694
+  },
+  "frames: inventory, hover index item": {
+    "frames": 3583,
+    "frame_ms": {
+      "mean": 1.224,
+      "p50": 1.207,
+      "p95": 1.409,
+      "p99": 1.509,
+      "max": 2.865
+    },
+    "screen_ms": {
+      "mean": 0.846,
+      "p50": 0.832,
+      "p95": 1.01,
+      "p99": 1.109,
+      "max": 1.3
+    },
+    "screen_alloc_kb_mean": 346.3252032165783
+  },
+  "frames: inventory, hover index item + Alt": {
+    "frames": 3403,
+    "frame_ms": {
+      "mean": 1.3,
+      "p50": 1.282,
+      "p95": 1.508,
+      "p99": 1.591,
+      "max": 3.157
+    },
+    "screen_ms": {
+      "mean": 0.92,
+      "p50": 0.904,
+      "p95": 1.103,
+      "p99": 1.198,
+      "max": 2.823
+    },
+    "screen_alloc_kb_mean": 381.89545529679697
+  },
+  "frames: inventory, hover chain bracket": {
+    "frames": 3330,
+    "frame_ms": {
+      "mean": 1.334,
+      "p50": 1.319,
+      "p95": 1.534,
+      "p99": 1.622,
+      "max": 2.951
+    },
+    "screen_ms": {
+      "mean": 0.96,
+      "p50": 0.947,
+      "p95": 1.137,
+      "p99": 1.25,
+      "max": 2.618
+    },
+    "screen_alloc_kb_mean": 392.3626360735736
+  },
+  "frames: inventory, hover chain bracket + Shift": {
+    "frames": 3318,
+    "frame_ms": {
+      "mean": 1.337,
+      "p50": 1.324,
+      "p95": 1.543,
+      "p99": 1.631,
+      "max": 2.459
+    },
+    "screen_ms": {
+      "mean": 0.961,
+      "p50": 0.949,
+      "p95": 1.137,
+      "p99": 1.256,
+      "max": 2.14
+    },
+    "screen_alloc_kb_mean": 392.6497183921037
+  },
+  "frames: uses of stick, mouse idle": {
+    "frames": 3168,
+    "frame_ms": {
+      "mean": 1.409,
+      "p50": 1.396,
+      "p95": 1.616,
+      "p99": 1.692,
+      "max": 2.829
+    },
+    "screen_ms": {
+      "mean": 1.035,
+      "p50": 1.023,
+      "p95": 1.221,
+      "p99": 1.332,
+      "max": 2.509
+    },
+    "screen_alloc_kb_mean": 396.7767223011364
+  },
+  "frames: uses of stick, hover recipe slot": {
+    "frames": 3001,
+    "frame_ms": {
+      "mean": 1.493,
+      "p50": 1.478,
+      "p95": 1.696,
+      "p99": 1.769,
+      "max": 2.659
+    },
+    "screen_ms": {
+      "mean": 1.116,
+      "p50": 1.103,
+      "p95": 1.314,
+      "p99": 1.399,
+      "max": 1.57
+    },
+    "screen_alloc_kb_mean": 434.0205139953349
+  },
+  "frames: uses of stick, hover recipe slot + Alt": {
+    "frames": 2742,
+    "frame_ms": {
+      "mean": 1.644,
+      "p50": 1.627,
+      "p95": 1.857,
+      "p99": 1.942,
+      "max": 3.173
+    },
+    "screen_ms": {
+      "mean": 1.267,
+      "p50": 1.249,
+      "p95": 1.476,
+      "p99": 1.587,
+      "max": 2.835
+    },
+    "screen_alloc_kb_mean": 513.9671174097374
+  },
+  "call: key press (unbound) over index item (us)": 6.0139499999999995,
+  "call: key press (unbound) over bookmark (us)": 3.6714499999999997,
+  "call: click + release on empty space (us)": 2.48975,
+  "call: scroll over index (us)": 1.31675,
+  "call: Ctrl + scroll on a chain recipe, then re-layout (us)": 2075.1707,
+  "call: crafting chain tooltip (Shift) (us)": 20.950950000000002,
+  "action: open uses: call": {
+    "mean": 1.02,
+    "p50": 1.006,
+    "p95": 1.228,
+    "p99": 1.326,
+    "max": 1.326
+  },
+  "action: open uses: first frame": {
+    "mean": 1.866,
+    "p50": 1.861,
+    "p95": 2.142,
+    "p99": 2.238,
+    "max": 2.238
+  },
+  "action: open uses: call + first frame": {
+    "mean": 2.886,
+    "p50": 2.925,
+    "p95": 3.269,
+    "p99": 3.406,
+    "max": 3.406
+  },
+  "action: open recipes: call": {
+    "mean": 0.762,
+    "p50": 0.829,
+    "p95": 1.02,
+    "p99": 1.046,
+    "max": 1.046
+  },
+  "action: open recipes: first frame": {
+    "mean": 1.675,
+    "p50": 1.706,
+    "p95": 2.154,
+    "p99": 2.474,
+    "max": 2.474
+  },
+  "action: open recipes: call + first frame": {
+    "mean": 2.437,
+    "p50": 2.588,
+    "p95": 3.174,
+    "p99": 3.271,
+    "max": 3.271
+  }
+}

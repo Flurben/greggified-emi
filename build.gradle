@@ -19,6 +19,11 @@ sourceSets {
         compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
         runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
     }
+    // In-pack test harness (./gradlew testkitJar): a separate dev-only mod jar dropped into a real modpack next to
+    // (or instead of) this mod, to compare EMI with and without it. Never shipped.
+    testkit {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+    }
 }
 
 minecraft {
@@ -139,6 +144,17 @@ tasks.named('jar', Jar).configure {
     }
 
     finalizedBy 'reobfJar'
+}
+
+tasks.register('testkitJar', Jar) {
+    archiveBaseName = 'greggified-emi-testkit'
+    archiveVersion = mod_version
+    from sourceSets.testkit.output
+    finalizedBy 'reobfTestkitJar'
+}
+
+reobf {
+    testkitJar {}
 }
 
 tasks.withType(JavaCompile).configureEach {

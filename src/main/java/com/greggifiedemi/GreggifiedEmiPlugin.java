@@ -36,6 +36,11 @@ public class GreggifiedEmiPlugin implements EmiPlugin {
 
     @Override
     public void register(EmiRegistry registry) {
+        // the dev-only baseline benchmark measures EMI without anything from this mod
+        if (Boolean.getBoolean("greggifiedemi.baseline")) {
+            return;
+        }
+
         registry.addRecipeDecorator(GreggifiedEmiPlugin::decorate);
     }
 

@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="LGPL-3.0-or-later"
+
+[[mods]]
+modId="greggifiedemi_testkit"
+version="0.1.0"
+displayName="Greggified EMI Testkit (dev only)"
+description='''Drives EMI inside a modpack and times frames, with or without Greggified EMI. Never ship this.'''
+displayTest="IGNORE_ALL_VERSION"
+
+[[dependencies.greggifiedemi_testkit]]
+    modId="emi"
+    mandatory=true
+    versionRange="[1.1.22,1.2)"
+    ordering="AFTER"
+    side="CLIENT"
+
+[[dependencies.greggifiedemi_testkit]]
+    modId="greggifiedemi"
+    mandatory=false
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="CLIENT"

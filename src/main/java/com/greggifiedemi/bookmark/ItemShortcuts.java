@@ -203,6 +203,18 @@ public final class ItemShortcuts {
             return true;
         }
 
+        // NEI's favorite button in the recipe view: Shift + T saves the recipe's favorite tree and opens it
+        if (Keys.matchesExactly(Keys.OPEN_CRAFTING_TREE, keyCode, scanCode, false, true, false)) {
+            final EmiRecipe focused = focusedRecipe(mouseX, mouseY);
+
+            if (focused != null && RecipeBookmarks.canBookmark(focused)) {
+                final ChainStack result = focused.getOutputs().isEmpty() ? null
+                        : Stacks.of(focused.getOutputs().get(0), 1);
+                final int groupId = FavoriteTree.save(focused, result);
+                return groupId != -1 && CraftingTreeScreen.open(BookmarkPanel.grid(), groupId);
+            }
+        }
+
         if (hovered == null) {
             final int groupId = BookmarkPanel.hoveredGroupId(mouseX, mouseY);
 

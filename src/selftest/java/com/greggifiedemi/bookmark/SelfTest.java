@@ -884,6 +884,22 @@ public final class SelfTest {
                 }
                 case 74 -> {
                     screenshot("27-recipe-keys");
+                    // Shift + T over a recipe saves its favorite tree and opens the crafting tree (NEI's favorite button)
+                    final var accessor = (com.greggifiedemi.mixin.RecipeScreenAccessor) minecraft.screen;
+                    final var group = accessor.greggifiedemi$getCurrentPage().stream()
+                            .filter(g -> g.recipe != null && g.recipe.getId() != null).findFirst().orElse(null);
+                    check(group != null, "the recipe view shows a recipe");
+                    moveMouse(group.x + 2, group.y + 2);
+                    final int groups = grid.getGroups().size();
+                    TestInput.hold(GLFW.GLFW_KEY_LEFT_SHIFT);
+                    check(key(GLFW.GLFW_KEY_T, 20), "Shift + T over a recipe consumed");
+                    TestInput.release();
+                    check(grid.getGroups().size() == groups + 1
+                            && minecraft.screen instanceof com.greggifiedemi.tree.CraftingTreeScreen,
+                            "Shift + T saved the recipe tree and opened the crafting tree");
+                }
+                case 75 -> {
+                    screenshot("28-shift-t-tree");
                     minecraft.setScreen(new InventoryScreen(minecraft.player));
                     GreggifiedEmi.LOGGER.info("[selftest] done, {} failure(s): {}", failures.size(), failures);
                     minecraft.stop();

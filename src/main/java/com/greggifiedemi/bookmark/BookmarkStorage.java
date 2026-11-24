@@ -352,17 +352,8 @@ public final class BookmarkStorage {
                 fromJson(grid(), json);
             }
 
-            // Before version 3 groups defaulted to the packed view; switch them to one row per recipe once
-            if (!json.has("version") || json.get("version").getAsInt() < VERSION) {
-                for (BookmarkGrid grid : namespaces) {
-                    for (int groupId : grid.getGroups().keySet()) {
-                        grid.setViewMode(groupId, BookmarkGrid.DEFAULT_VIEW_MODE);
-                    }
-                }
-
-                dirty = true;
-                dirtySince = 0;
-            }
+            // GTNH Bookmarks for EMI switched every group to the to-do list once (storage version 3); Greggified EMI
+            // keeps whatever view mode each group was saved with, like NEI
         } catch (Exception e) {
             GreggifiedEmi.LOGGER.error("Failed to read bookmarks from {}", path, e);
         }

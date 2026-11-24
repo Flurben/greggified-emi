@@ -1,42 +1,32 @@
-# GTNH Bookmarks for EMI — agent guide
+# Greggified EMI — agent guide
 
-A client-side Forge 1.20.1 addon for EMI. It ports the **bookmark panel** of GTNewHorizons' NotEnoughItems (NEI)
-into EMI's favorites sidebar. That covers groups, crafting chains with calculated amounts, view modes, collapsing,
-NEI's hotkeys, auto-crafting and persistence. `README.md` is the user-facing manual with every control. Read it before
-changing behaviour.
+A client-side Forge 1.20.1 addon for EMI that makes EMI behave like **GTNH 2.9.1's NotEnoughItems
+(NotEnoughItems 2.8.175-GTNH)**: bookmark panel, crafting chains, auto-crafting, crafting tree window, history panel,
+item zoom, NEI keybinds and search syntax. `README.md` is the user manual, `docs/PARITY.md` the NEI-by-NEI comparison,
+`docs/PERFORMANCE.md` the measurements, `docs/IMPLEMENTATION_PLAN.md` the design. Read them before changing behaviour.
 
-- **Repo:** https://github.com/Flurben/gtnh-bookmarks-for-emi (branch `main`, releases tagged `vX.Y.Z`).
-- **License:** LGPL-3.0-or-later. Much of the code is ported from NEI, which is LGPL.
-- **Reference source:** https://github.com/GTNewHorizons/NotEnoughItems. The classes that matter are `BookmarkPanel`,
-  `BookmarkGrid`, `BookmarkGridGenerator`, `RecipeChainMath`, `RecipeChainDetails`, `ShortcutInputHandler`,
-  `AutoCraftingManager` and `NEIClientConfig` (for default keys). Most classes here say in their Javadoc which NEI
-  class they port.
+- **License:** LGPL-3.0-or-later (ported from NEI, which is LGPL; NEI's crafting tree texture is reused).
+- **Reference source:** https://github.com/GTNewHorizons/NotEnoughItems at tag `2.8.175-GTNH`. Classes that matter:
+  `ShortcutInputHandler` (item keys), `NEIClientConfig` (default keys/options), `LayoutManager`, `SearchField`,
+  `PanelWidget`, `GuiRecipe` (screen keys), `BookmarkPanel`/`BookmarkGrid`/`RecipeChainMath`, `bookmark/tree/*`,
+  `ItemZoom`, `ItemHistoryPanel`, `GuiFavoriteButton`. Javadoc here names the NEI class each class ports.
+- **Origin:** forked from the owner's *GTNH Bookmarks for EMI* (`../GTNH Recipe Trees in EMI`, mod ID
+  `emicraftingtree`). Its saves are imported once from `emicraftingtree/`.
 
 ## Product rules (from the owner)
 
-1. **Behaviour must be exactly NEI's** (click semantics, default keys, tooltips, hotkey-list wording, colours and
-   ordering). Check the NEI source before changing any interaction. The owner's reference screenshots predate NEI's
-   crafting-tree window and group chat links. Where newer NEI source differs, match the screenshots, and don't port
-   those newer features.
-2. **Everything stays inside the sidebar panel.** A separate "crafting tree" window was built, explicitly rejected and
-   removed. Don't add new screens unless asked.
-3. **Deliberate deviations from NEI.** Keep them:
-   - To-do-list view (one row per recipe or item, result first) is the default for every group. Saves older than
-     storage version 3 are migrated to it once.
-   - `A` only ever adds the item. `Shift + A` adds the recipe. This applies everywhere, including EMI's recipe view.
-   - In EMI's item list, `Shift + A` uses the favorite recipe: EMI's default recipe, else the item's only recipe, else
-     EMI's preferred recipe. It never adds the bare item.
-   - Filling the grid is `Shift + click` on a bookmark (`Ctrl + Shift + click` fills the bookmarked quantity), not
-     NEI's `Shift + S`. Plain `S` is still the overlay.
-   - Auto-crafting reuses **EMI's own recipe filling** (`EmiRecipeFiller.performFill`). Don't write a custom
-     slot-clicking crafter: one was tried and broke in the owner's pack. EMI ignores NBT by default, so worn or renamed
-     tools and any accepted substitute work.
-   - "A" is EMI's favorite key standing in for NEI's bookmark key. All other keys are NEI defaults, under Controls →
-     "EMI Bookmarks".
-4. **Every modifier shortcut (Shift, Ctrl, Alt) must be covered by the in-game self-test.** Most keybinds use
-   modifiers, so this is a hard requirement.
-5. **Test against the owner's pack too.** The owner plays TerraFirmaGreg Modern (GregTech CEu tools, FastWorkbench).
-   Auto-crafting must keep working with FastWorkbench (`-Pfastbench`, see below).
+1. **NEI parity is the goal:** a GTNH player must be able to use the mod as if still playing GTNH. Default keys,
+   modifiers, click semantics, tooltips, hotkey-list wording and colours are NEI 2.8.175's. Check the NEI source before
+   changing an interaction. The earlier addon's deliberate deviations were reverted (Shift+S fills the grid, groups
+   default to NEI's packed view, the crafting tree window exists).
+2. **EMI must stay at least as fast** as without the mod. Measure with the benchmark and the pack testkit before and
+   after anything that runs per frame, per search or per key.
+3. **Never write EMI's config** for our layout changes (the history subpanel is in memory only and is detached while
+   EMI writes `emi.css`).
+4. Auto-crafting reuses **EMI's own recipe filling** (`EmiRecipeFiller.performFill`); don't write a slot-clicking
+   crafter. EMI ignores NBT by default, so worn GregTech tools count.
+5. **Every modifier shortcut must be covered by the in-game self-test**, and features must also be checked in the
+   owner's pack (TerraFirmaGreg-Modern) with the testkit.
 
 ## Build, test, run
 
@@ -46,9 +36,10 @@ on the owner's machine.
 | Command | What it does |
 | --- | --- |
 | `./gradlew build` | Compiles, runs the unit tests, and writes `build/libs/gtnh-bookmarks-for-emi-<version>.jar`. |
-| `./gradlew test` | Unit tests only (18): `RecipeChainMathTest` and `BookmarkGridTest`, pure Java, no Minecraft. |
-| `./gradlew runClient -Pselftest` | The scripted in-game test, which then quits. Check `run/logs/latest.log` for `[selftest]` lines and the final `[selftest] done, N failure(s)`. Currently 88 checks; screenshots go to `run/screenshots/selftest-*.png`. |
+| `./gradlew test` | Unit tests only (25): `RecipeChainMathTest` and `BookmarkGridTest`, pure Java, no Minecraft. |
+| `./gradlew runClient -Pselftest` | The scripted in-game test, which then quits. Check `run/logs/latest.log` for `[selftest]` lines and the final `[selftest] done, N failure(s)`. Currently 114 checks; screenshots go to `run/screenshots/selftest-*.png`. |
 | `... -Pselftest -Pfastbench` | The same with FastWorkbench and Placebo loaded. Their jars go in the git-ignored `compat-libs/` (names in `build.gradle`). |
+| `./gradlew testkitJar` | Builds `build/libs/greggified-emi-testkit-<v>.jar`, a dev-only mod for real packs: drop it into a pack (with an empty `greggified-testkit/enabled` file in the game dir), with and without the mod jar; it creates/loads a creative world, times EMI scenarios, runs feature checks and writes `greggified-testkit/<mode>-<time>.json`. |
 | `./gradlew runClient -Pbenchmark` | Frame and input timings to `run/benchmark/mod.json`. Add `-Pbaseline` for EMI alone (`baseline.json`), `-Pbenchsize=600` for a large list, and `-Pjfr` for a JFR profile. Log lines are tagged `[bench:<mode>]`. |
 
 - **Desktop window:** `runClient` opens a real Minecraft window on the user's desktop for about a minute. Tell the user
@@ -66,6 +57,15 @@ storage, also run the self-test, and run it with `-Pfastbench` for auto-crafting
 interactions.
 
 ## Code map (`src/main/java/com/greggifiedemi`)
+
+- **`nei/`**: `NeiInput` (key order: O, bookmark/item shortcuts, zoom, F, PgUp/PgDn), `RecipeKeys` (arrow keys in
+  EMI's recipe view, on Forge's pre-key event), `NeiSearchSyntax` + `IdentifierQuery` (NEI prefixes),
+  `ItemZoom`, `HistoryPanel`.
+- **`tree/`**: the crafting tree window — `CraftingTreeMath` (records chain steps), `TreeGraph`, `TreeCanvas` (NEI's
+  contour layout and drawing), `Camera`, `StatsPanel`, `CraftingTreeScreen`.
+- **`GreggifiedEmiPlugin`**: EMI plugin; recipe decorators for "Use for recipe tree" and the present-item highlight.
+- **Mixins added here:** `CompiledQueryMixin` (search prefixes), `EmiConfigMixin` (keep emi.css clean),
+  `EmiTagKeyMixin` (EMI thread-safety fix), plus the inherited sidebar/input mixins below.
 
 - **Entry:** `GreggifiedEmi` (the `@Mod`; the mod ID is `greggifiedemi`) and `ClientSetup` (config, keys, tick,
   and the overlay drawn on `ScreenEvent.Render.Post`, priority LOWEST).
