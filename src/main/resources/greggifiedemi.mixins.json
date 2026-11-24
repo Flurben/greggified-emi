@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.greggifiedemi.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "CompiledQueryMixin",
+    "EmiFavoritesMixin",
+    "EmiScreenManagerMixin",
+    "EmiSidebarsMixin",
+    "RecipeScreenAccessor",
+    "ScreenSpaceMixin",
+    "SidebarPanelMixin",
+    "SlotWidgetMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

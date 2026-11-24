@@ -1,0 +1,10 @@
+build/
+.gradle/
+run/
+out/
+*.iml
+.idea/
+.vscode/
+bin/
+compat-libs/
+CLAUDE.local.md
